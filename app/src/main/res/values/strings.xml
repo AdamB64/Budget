@@ -1,3 +1,29 @@
 <resources>
     <string name="app_name">Budget</string>
+    <!--Reused text-->
+    <string name="tvTitleText">This is the budget app</string>
+    <string name="tvPassword">Type password below</string>
+    <string name="hintPassword">password</string>
+
+    <!--String Resources for the Home fragment-->
+    <string name="tvBudgetText">Click here to see budget</string>
+    <string name="tvGoalText">Click here to set/update goal</string>
+    <string name="tvIncome">Add/View Income</string>
+    <string name="tvExpenses">Add/View Expenses</string>
+
+    <!--String resources for the start up fragment-->
+    <string name="tvInfo">This is a budget app to help you manage you money</string>
+    <string name="tvRegisterNav">Click here to register for our budget app</string>
+    <string name="tvLoginNav">Click here to login for out budget app</string>
+
+    <!--String Resources for the register fragment-->
+    <string name="tvRegisterTitle">Type your email, name and you a unique password below</string>
+    <string name="tvEmail">Type Email here</string>
+    <string name="tvName">Type Name here</string>
+    <string name="tvRegister">Register</string>
+
+    <!--String resources for the login fragment-->
+    <string name="tvTitleLogin">Type below your name/email and password to login</string>
+    <string name="tvName_Email">Type Email/Name here</string>
+    <string name="tvLogin">Login</string>
 </resources>
