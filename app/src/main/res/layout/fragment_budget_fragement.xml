@@ -1,6 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".BudgetFragement" />
+    tools:context=".BudgetFragement" >
+
+    <TextView
+        android:id="@+id/BudgetTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/tvTitleBudget"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.11" />
+
+    <TextView
+        android:id="@+id/BudgetInput"
+        android:layout_width="174dp"
+        android:layout_height="41dp"
+        android:text=""
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/BudgetText"
+        app:layout_constraintVertical_bias="0.052" />
+
+    <TextView
+        android:id="@+id/GoalInput"
+        android:layout_width="174dp"
+        android:layout_height="41dp"
+        android:text=""
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/GoalText"
+        app:layout_constraintVertical_bias="0.067" />
+
+    <TextView
+        android:id="@+id/GoalText"
+        android:layout_width="174dp"
+        android:layout_height="41dp"
+        android:layout_marginTop="36dp"
+        android:text="@string/tvGoal"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/BudgetInput" />
+
+    <TextView
+        android:id="@+id/BudgetText"
+        android:layout_width="174dp"
+        android:layout_height="41dp"
+        android:layout_marginTop="64dp"
+        android:text="@string/tvBudget"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/BudgetTitle" />
+
+    <Button
+        android:id="@+id/BtnExpensesNav2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="76dp"
+        android:layout_marginEnd="104dp"
+        android:text="@string/tvExpenses"
+        app:layout_constraintEnd_toStartOf="@+id/BtnIncomeNav2"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/GoalInput" />
+
+    <Button
+        android:id="@+id/BtnIncomeNav2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="76dp"
+        android:layout_marginEnd="16dp"
+        android:text="@string/tvIncome"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/GoalInput" />
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,12 +4,13 @@
     <string name="tvTitleText">This is the budget app</string>
     <string name="tvPassword">Type password below</string>
     <string name="hintPassword">password</string>
-
-    <!--String Resources for the Home fragment-->
-    <string name="tvBudgetText">Click here to see budget</string>
-    <string name="tvGoalText">Click here to set/update goal</string>
     <string name="tvIncome">Add/View Income</string>
     <string name="tvExpenses">Add/View Expenses</string>
+    <string name="tvBudgetText">Click here to see budget</string>
+
+    <!--String Resources for the Home fragment-->
+    <string name="tvGoalText">Click here to view/update goal</string>
+
 
     <!--String resources for the start up fragment-->
     <string name="tvInfo">This is a budget app to help you manage you money</string>
@@ -26,4 +27,35 @@
     <string name="tvTitleLogin">Type below your name/email and password to login</string>
     <string name="tvName_Email">Type Email/Name here</string>
     <string name="tvLogin">Login</string>
+
+    <!--String resources for the budget Fragment-->
+    <string name="tvTitleBudget">Here you can see your budget and also your percentage towards your goal</string>
+    <string name="tvBudget">your budget is below</string>
+    <string name="tvGoal">Your goal is below</string>
+
+    <!--String resources for the Goal fragment-->
+    <string name="tvGoalTitle">Here you can see your goal and also update it</string>
+    <string name="tvTextGoal">See goal below</string>
+    <string name="tvNewGoal">Type new Goal here</string>
+    <string name="tvSetGoal">Apply new goal</string>
+
+    <!--String resources for the income fragment-->
+    <string name="tvIncomeTitle">Here is where you can add new income to add more to your budget</string>
+    <string name="tvIncomeAmount">Type here the amount earned</string>
+    <string name="tvIncomeDate">Type here the date earned</string>
+    <string name="tvIncomeDescription">Type here a description for the income if wanted</string>
+    <string name="tvSetIncome">Add Income</string>
+
+    <!--String Resources for the expenses fragment-->
+    <string name="tvExpenseTitle">Here is where you can add new expense to take away from your budget</string>
+    <string name="tvExpenseAmount">Type here the amount spent</string>
+    <string name="tvExpenseDate">Type here the date spent</string>
+    <string name="tvExpenseDescription">Type here a description for the expense if wanted</string>
+    <string name="tvSetExpense">Add Expense</string>
+
+    <!--String resources for the income view fragment-->
+    <string name="tvIncomeViewTitle">See below all the income with dates and description if added</string>
+
+    <!--String resources for the expenses view fragment-->
+    <string name="tvExpensesViewTitle">See below all the expenses with dates and description if added</string>
 </resources>
