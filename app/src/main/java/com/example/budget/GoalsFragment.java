@@ -2,18 +2,21 @@ package com.example.budget;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link GoalsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class GoalsFragment extends Fragment {
+public class GoalsFragment extends Fragment implements View.OnClickListener{
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -60,5 +63,29 @@ public class GoalsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_goals, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        //getting the buttons to nav to budget, income and expense fragments
+        Button BudgetNavButton = view.findViewById(R.id.BtnBudgetNavInc);
+        BudgetNavButton.setOnClickListener(this);
+
+        Button IncomeButton = view.findViewById(R.id.BtnGoalNavInc);
+        IncomeButton.setOnClickListener(this);
+
+        Button ExpensesButton = view.findViewById(R.id.BtnGoalNavExp);
+        ExpensesButton.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View view) {
+        if(view.getId()==R.id.BtnBudgetNavInc){
+            Navigation.findNavController(view).navigate(R.id.action_goalsFragment_to_budgetFragement);
+        } else if (view.getId()==R.id.BtnGoalNavExp) {
+            Navigation.findNavController(view).navigate(R.id.action_goalsFragment_to_expenseFragment);
+        } else if (view.getId()==R.id.BtnGoalNavInc) {
+            Navigation.findNavController(view).navigate(R.id.action_goalsFragment_to_incomeFragment);
+        }
     }
 }

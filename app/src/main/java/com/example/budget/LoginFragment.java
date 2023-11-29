@@ -2,18 +2,21 @@ package com.example.budget;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link LoginFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class LoginFragment extends Fragment {
+public class LoginFragment extends Fragment implements View.OnClickListener{
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -60,5 +63,19 @@ public class LoginFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_login, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        //getting the button for going to the home fragment
+        Button HomeNavLog = view.findViewById(R.id.BtnLogin);
+        HomeNavLog.setOnClickListener(this);
+    }
+    @Override
+    public void onClick(View view) {
+        //going to the home fragment if button clicked
+        if(view.getId()==R.id.BtnLogin){
+            Navigation.findNavController(view).navigate(R.id.action_loginFragment_to_homeFragment);
+        }
     }
 }

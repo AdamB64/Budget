@@ -2,18 +2,21 @@ package com.example.budget;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link RegisterFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class RegisterFragment extends Fragment {
+public class RegisterFragment extends Fragment implements View.OnClickListener{
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -61,4 +64,20 @@ public class RegisterFragment extends Fragment {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_register, container, false);
     }
+
+    @Override
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        //get the button for register
+        Button HomeNavReg = view.findViewById(R.id.BntRegister);
+        HomeNavReg.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View view){
+        //if the register button is clicked go to home page
+        if(view.getId()==R.id.BntRegister){
+            Navigation.findNavController(view).navigate(R.id.action_registerFragment_to_homeFragment);
+        }
+    }
+
 }

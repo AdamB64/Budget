@@ -2,18 +2,22 @@ package com.example.budget;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link StartUpFragement#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class StartUpFragement extends Fragment {
+public class StartUpFragement extends Fragment implements View.OnClickListener{
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -61,4 +65,26 @@ public class StartUpFragement extends Fragment {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_start_up_fragement, container, false);
     }
+
+    @Override
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        //getting the button to navigate to the register fragment
+        Button RegisterButton = view.findViewById(R.id.BtnRegisterNav);
+        RegisterButton.setOnClickListener(this);
+
+        //getting the button to navigate to the login fragment
+        Button LoginButton = view.findViewById(R.id.BtnLoginNav);
+        LoginButton.setOnClickListener(this);
+    }
+    @Override
+    public void onClick(View view){
+        NavController navController = Navigation.findNavController(view);
+        //using the if statement to navigate to the connected fragments
+        if(view.getId()==R.id.BtnRegisterNav){
+           navController.navigate(R.id.action_startUpFragement_to_registerFragment);
+        } else if (view.getId()==R.id.BtnLoginNav) {
+            navController.navigate((R.id.action_startUpFragement_to_loginFragment));
+        }
+    }
+
 }

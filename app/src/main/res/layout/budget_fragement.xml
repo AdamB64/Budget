@@ -70,7 +70,7 @@
         android:id="@+id/BtnExpensesNav2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="76dp"
+        android:layout_marginTop="80dp"
         android:layout_marginEnd="104dp"
         android:text="@string/tvExpenses"
         app:layout_constraintEnd_toStartOf="@+id/BtnIncomeNav2"
@@ -87,4 +87,28 @@
         android:text="@string/tvIncome"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/GoalInput" />
+
+    <Button
+        android:id="@+id/BtnHome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="36dp"
+        android:text="@string/tvHome"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/BtnExpensesNav2" />
+
+    <Button
+        android:id="@+id/BtnGoalNavBudget"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="36dp"
+        android:text="@string/tvGoalNav"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.93"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/BtnIncomeNav2" />
 </androidx.constraintlayout.widget.ConstraintLayout>

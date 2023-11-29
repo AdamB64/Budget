@@ -2,18 +2,21 @@ package com.example.budget;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link ExpenseFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ExpenseFragment extends Fragment {
+public class ExpenseFragment extends Fragment implements View.OnClickListener{
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -60,5 +63,24 @@ public class ExpenseFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_expense, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        //get the button to navigate to the expenses view page
+        Button ExpensesViewButton = view.findViewById(R.id.BtnAddExpense);
+        ExpensesViewButton.setOnClickListener(this);
+
+        //getting the button to navigate to the budget page
+        Button BudgetNavButton = view.findViewById(R.id.BtnBudgetNavExp);
+        BudgetNavButton.setOnClickListener(this);
+    }
+    @Override
+    public void onClick(View view) {
+        if(view.getId()==R.id.BtnAddExpense){
+            Navigation.findNavController(view).navigate(R.id.action_expenseFragment_to_viewExpensesFragment);
+        } else if (view.getId()==R.id.BtnBudgetNavExp) {
+            Navigation.findNavController(view).navigate(R.id.action_expenseFragment_to_budgetFragement);
+        }
     }
 }

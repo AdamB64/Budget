@@ -32,6 +32,8 @@
     <string name="tvTitleBudget">Here you can see your budget and also your percentage towards your goal</string>
     <string name="tvBudget">your budget is below</string>
     <string name="tvGoal">Your goal is below</string>
+    <string name="tvHome">Click here to go to home</string>
+    <string name="tvGoalNav">Click here to go to goals</string>
 
     <!--String resources for the Goal fragment-->
     <string name="tvGoalTitle">Here you can see your goal and also update it</string>

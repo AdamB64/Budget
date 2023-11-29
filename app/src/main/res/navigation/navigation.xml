@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@id/startUpFragement">
+
+    <fragment
+        android:id="@+id/budgetFragement"
+        android:name="com.example.budget.BudgetFragement"
+        android:label="fragment_budget_fragement"
+        tools:layout="@layout/budget_fragement" >
+        <action
+            android:id="@+id/action_budgetFragement_to_incomeFragment"
+            app:destination="@id/incomeFragment" />
+        <action
+            android:id="@+id/action_budgetFragement_to_expenseFragment"
+            app:destination="@id/expenseFragment" />
+        <action
+            android:id="@+id/action_budgetFragement_to_homeFragment"
+            app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_budgetFragement_to_goalsFragment"
+            app:destination="@id/goalsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/expenseFragment"
+        android:name="com.example.budget.ExpenseFragment"
+        android:label="fragment_expense"
+        tools:layout="@layout/fragment_expense" >
+        <action
+            android:id="@+id/action_expenseFragment_to_viewExpensesFragment"
+            app:destination="@id/viewExpensesFragment" />
+        <action
+            android:id="@+id/action_expenseFragment_to_budgetFragement"
+            app:destination="@id/budgetFragement" />
+    </fragment>
+    <fragment
+        android:id="@+id/goalsFragment"
+        android:name="com.example.budget.GoalsFragment"
+        android:label="fragment_goals"
+        tools:layout="@layout/fragment_goals" >
+        <action
+            android:id="@+id/action_goalsFragment_to_incomeFragment"
+            app:destination="@id/incomeFragment" />
+        <action
+            android:id="@+id/action_goalsFragment_to_expenseFragment"
+            app:destination="@id/expenseFragment" />
+        <action
+            android:id="@+id/action_goalsFragment_to_budgetFragement"
+            app:destination="@id/budgetFragement" />
+    </fragment>
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.budget.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_budgetFragement"
+            app:destination="@id/budgetFragement" />
+        <action
+            android:id="@+id/action_homeFragment_to_incomeFragment"
+            app:destination="@id/incomeFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_expenseFragment"
+            app:destination="@id/expenseFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_goalsFragment"
+            app:destination="@id/goalsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/incomeFragment"
+        android:name="com.example.budget.IncomeFragment"
+        android:label="fragment_income"
+        tools:layout="@layout/fragment_income" >
+        <action
+            android:id="@+id/action_incomeFragment_to_viewIncomeFragment"
+            app:destination="@id/viewIncomeFragment" />
+        <action
+            android:id="@+id/action_incomeFragment_to_budgetFragement"
+            app:destination="@id/budgetFragement" />
+    </fragment>
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.budget.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_loginFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.example.budget.RegisterFragment"
+        android:label="fragment_register"
+        tools:layout="@layout/fragment_register" >
+        <action
+            android:id="@+id/action_registerFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/startUpFragement"
+        android:name="com.example.budget.StartUpFragement"
+        android:label="fragment_start_up_fragement"
+        tools:layout="@layout/fragment_start_up_fragement" >
+        <action
+            android:id="@+id/action_startUpFragement_to_registerFragment"
+            app:destination="@id/registerFragment" />
+        <action
+            android:id="@+id/action_startUpFragement_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/viewExpensesFragment"
+        android:name="com.example.budget.ViewExpensesFragment"
+        android:label="fragment_view_expenses"
+        tools:layout="@layout/fragment_view_expenses" >
+        <action
+            android:id="@+id/action_viewExpensesFragment_to_budgetFragement"
+            app:destination="@id/budgetFragement" />
+    </fragment>
+    <fragment
+        android:id="@+id/viewIncomeFragment"
+        android:name="com.example.budget.ViewIncomeFragment"
+        android:label="fragment_view_income"
+        tools:layout="@layout/fragment_view_income" >
+        <action
+            android:id="@+id/action_viewIncomeFragment_to_budgetFragement"
+            app:destination="@id/budgetFragement" />
+    </fragment>
+</navigation>
