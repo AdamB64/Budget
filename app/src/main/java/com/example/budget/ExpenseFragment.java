@@ -68,12 +68,16 @@ public class ExpenseFragment extends Fragment implements View.OnClickListener{
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         //get the button to navigate to the expenses view page
-        Button ExpensesViewButton = view.findViewById(R.id.BtnAddExpense);
-        ExpensesViewButton.setOnClickListener(this);
+        Button ExpensesAddButton = view.findViewById(R.id.BtnAddExpense);
+        ExpensesAddButton.setOnClickListener(this);
 
         //getting the button to navigate to the budget page
         Button BudgetNavButton = view.findViewById(R.id.BtnBudgetNavExp);
         BudgetNavButton.setOnClickListener(this);
+
+        //getting button to go to expenses view
+        Button ExpensesViewButton = view.findViewById(R.id.BtnExpNavExpView);
+        ExpensesViewButton.setOnClickListener(this);
     }
     @Override
     public void onClick(View view) {
@@ -81,6 +85,8 @@ public class ExpenseFragment extends Fragment implements View.OnClickListener{
             Navigation.findNavController(view).navigate(R.id.action_expenseFragment_to_viewExpensesFragment);
         } else if (view.getId()==R.id.BtnBudgetNavExp) {
             Navigation.findNavController(view).navigate(R.id.action_expenseFragment_to_budgetFragement);
+        } else if (view.getId()==R.id.BtnExpNavExpView) {
+            Navigation.findNavController(view).navigate(R.id.action_expenseFragment_to_viewExpensesFragment);
         }
     }
 }

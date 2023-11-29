@@ -6,10 +6,26 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+
+import java.nio.BufferUnderflowException;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -17,6 +33,8 @@ import android.widget.Button;
  * create an instance of this fragment.
  */
 public class IncomeFragment extends Fragment implements View.OnClickListener{
+
+    private RequestQueue requestQueue;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -67,21 +85,70 @@ public class IncomeFragment extends Fragment implements View.OnClickListener{
 
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        // Initialize the RequestQueue
+        requestQueue = Volley.newRequestQueue(requireContext());
+
         //getting the button that navigate to the income view fragment
-        Button IncomeViewButton = view.findViewById(R.id.BtnAddIncome);
-        IncomeViewButton.setOnClickListener(this);
+        Button IncomeAddButton = view.findViewById(R.id.BtnAddIncome);
+        IncomeAddButton.setOnClickListener(this);
 
         //getting the button that navigate to the budget fragment
         Button BudgetNavButton = view.findViewById(R.id.btnBudgetNavInc);
         BudgetNavButton.setOnClickListener(this);
+
+        //getting the button to view all expenses
+        Button IncomeViewButton = view.findViewById(R.id.BtnIncNavIncView);
+        IncomeViewButton.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View view) {
         if(view.getId()==R.id.BtnAddIncome){
+            writeToDatabase();
             Navigation.findNavController(view).navigate(R.id.action_incomeFragment_to_viewIncomeFragment);
         } else if (view.getId()==R.id.btnBudgetNavInc) {
             Navigation.findNavController(view).navigate(R.id.action_incomeFragment_to_budgetFragement);
+        } else if (view.getId()==R.id.BtnExpNavExpView) {
+            Navigation.findNavController(view).navigate(R.id.action_incomeFragment_to_viewIncomeFragment);
         }
     }
+    private void writeToDatabase() {
+        // Assuming you have a JSONObject with the data you want to write
+        JSONObject postData = new JSONObject();
+        try {
+            postData.put("key1", "value1");
+            postData.put("key2", "value2");
+            // Add other data fields as needed
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        // The URL to which you want to send the POST request
+        String writeUrl = "https://weather-f9ae8-default-rtdb.firebaseio.com/Budget.json";
+
+        // Create a JsonObjectRequest with POST method
+        JsonObjectRequest jsonRequest = new JsonObjectRequest(
+                Request.Method.POST, writeUrl, postData,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        // Handle the response from the server after writing data
+                        // You may want to update your UI or perform other actions
+                        // based on the server's response
+                        Log.d("WriteToDatabase", "Write successful");
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // Handle errors that occurred during the request
+                        error.printStackTrace();
+                        Log.e("WriteToDatabase", "Error writing to database");
+                    }
+                });
+
+        // Add the request to the RequestQueue
+        requestQueue.add(jsonRequest);
+    }
+
 }

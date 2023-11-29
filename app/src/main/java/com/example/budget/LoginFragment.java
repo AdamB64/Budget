@@ -6,10 +6,24 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -17,6 +31,7 @@ import android.widget.Button;
  * create an instance of this fragment.
  */
 public class LoginFragment extends Fragment implements View.OnClickListener{
+
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -65,12 +80,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
         return inflater.inflate(R.layout.fragment_login, container, false);
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
-        //getting the button for going to the home fragment
-        Button HomeNavLog = view.findViewById(R.id.BtnLogin);
-        HomeNavLog.setOnClickListener(this);
-    }
     @Override
     public void onClick(View view) {
         //going to the home fragment if button clicked

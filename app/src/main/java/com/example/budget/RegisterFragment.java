@@ -1,15 +1,30 @@
 package com.example.budget;
 
+import android.app.Activity;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -17,6 +32,8 @@ import android.widget.Button;
  * create an instance of this fragment.
  */
 public class RegisterFragment extends Fragment implements View.OnClickListener{
+
+    private RequestQueue requestQueue;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -67,17 +84,98 @@ public class RegisterFragment extends Fragment implements View.OnClickListener{
 
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        // Initialize the RequestQueue
+        requestQueue = Volley.newRequestQueue(requireContext());
+
+
         //get the button for register
         Button HomeNavReg = view.findViewById(R.id.BntRegister);
         HomeNavReg.setOnClickListener(this);
     }
-
     @Override
-    public void onClick(View view){
+    public void onClick(@NonNull View view){
         //if the register button is clicked go to home page
         if(view.getId()==R.id.BntRegister){
-            Navigation.findNavController(view).navigate(R.id.action_registerFragment_to_homeFragment);
+            boolean r =writeToDatabase(this.getView());
+            if(r==true) {
+                Navigation.findNavController(view).navigate(R.id.action_registerFragment_to_homeFragment);
+            }
         }
+    }
+
+    private Boolean writeToDatabase(@NonNull View view) {
+        boolean r =false;
+        // Retrieve data from input fields
+        String userName = ((EditText) view.findViewById(R.id.InputName)).getText().toString();
+        String userEmail = ((EditText) view.findViewById(R.id.InputEmail)).getText().toString();
+        String userPassword = ((EditText) view.findViewById(R.id.InputPassword)).getText().toString();
+        // Assuming you have a JSONObject with the data you want to write
+        JSONObject postData = new JSONObject();
+        try {
+            if(userName.isEmpty()==true || userEmail.isEmpty() ==true|| userPassword.isEmpty()==true)
+            {
+                Toast.makeText(getContext(), "Must have input in all fields", Toast.LENGTH_SHORT).show();
+            } else if (userEmail.contains("@")==false) {
+                Toast.makeText(getContext(), "email must have a @", Toast.LENGTH_SHORT).show();
+            }else {
+                r=true;
+                // Create an array for expenses
+                JSONArray expensesArray = new JSONArray();
+                JSONObject expenseObject = new JSONObject();
+                // You may want to get these values from the user input fields
+                expenseObject.put("Amount", 0);  // Replace with the actual amount value
+                expenseObject.put("Date", "");  // Replace with the actual date value
+                expenseObject.put("Description", "");  // Replace with the actual description value
+                expensesArray.put(expenseObject);
+
+                // Create an array for income
+                JSONArray incomeArray = new JSONArray();
+                JSONObject incomeObject = new JSONObject();
+                // You may want to get these values from the user input fields
+                incomeObject.put("Amount", 0);  // Replace with the actual amount value
+                incomeObject.put("Date", "");  // Replace with the actual date value
+                incomeObject.put("Description", "");  // Replace with the actual description value
+                incomeArray.put(incomeObject);
+
+                // Put arrays into the JSON object
+                postData.put("UserName", userName);
+                postData.put("Email", userEmail);
+                postData.put("Password", userPassword);
+                postData.put("Expenses", expensesArray);
+                postData.put("Income", incomeArray);
+
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        // The URL to which you want to send the POST request
+        String writeUrl = "https://weather-f9ae8-default-rtdb.firebaseio.com/Budget/users.json";
+
+        // Create a JsonObjectRequest with POST method
+        JsonObjectRequest jsonRequest = new JsonObjectRequest(
+                Request.Method.POST, writeUrl, postData,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        // Handle the response from the server after writing data
+                        // You may want to update your UI or perform other actions
+                        // based on the server's response
+                        Log.d("WriteToDatabase", "Write successful");
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // Handle errors that occurred during the request
+                        error.printStackTrace();
+                        Log.e("WriteToDatabase", "Error writing to database");
+                    }
+                });
+
+        // Add the request to the RequestQueue
+        requestQueue.add(jsonRequest);
+        return r;
     }
 
 }

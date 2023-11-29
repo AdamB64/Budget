@@ -47,6 +47,7 @@
     <string name="tvIncomeDate">Type here the date earned</string>
     <string name="tvIncomeDescription">Type here a description for the income if wanted</string>
     <string name="tvSetIncome">Add Income</string>
+    <string name="tvIncomeView">Click here to see incomes</string>
 
     <!--String Resources for the expenses fragment-->
     <string name="tvExpenseTitle">Here is where you can add new expense to take away from your budget</string>
@@ -54,6 +55,7 @@
     <string name="tvExpenseDate">Type here the date spent</string>
     <string name="tvExpenseDescription">Type here a description for the expense if wanted</string>
     <string name="tvSetExpense">Add Expense</string>
+    <string name="tvExpensesView">Click here to see expenses</string>
 
     <!--String resources for the income view fragment-->
     <string name="tvIncomeViewTitle">See below all the income with dates and description if added</string>

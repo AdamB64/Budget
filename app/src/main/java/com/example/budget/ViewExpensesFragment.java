@@ -6,10 +6,26 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -17,6 +33,20 @@ import android.widget.Button;
  * create an instance of this fragment.
  */
 public class ViewExpensesFragment extends Fragment implements View.OnClickListener{
+
+
+
+    //url for the cloud database
+    private static final String FIREBASE_DATABASE_URL = "https://weather-f9ae8-default-rtdb.firebaseio.com/User.json";
+
+    //Array for the expenses
+    private ArrayList<String> expensesList;
+
+    //array adapter
+    private ArrayAdapter<String> adapter;
+
+    //Volley request queue
+    private RequestQueue requestQueue;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -67,10 +97,74 @@ public class ViewExpensesFragment extends Fragment implements View.OnClickListen
 
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        //Initialise the expenses list and the adapter
+        expensesList = new ArrayList<>();
+        adapter = new ArrayAdapter<>(requireContext(),android.R.layout.simple_list_item_1,expensesList);
+
+        //set up the list view
+        ListView listView = view.findViewById(R.id.LstExpenses);
+        listView.setAdapter(adapter);
+
         //get the button to navigate to the budget page
         Button BudgetNavButton = view.findViewById(R.id.BtnIncBudgetNav);
         BudgetNavButton.setOnClickListener(this);
+
+        //Initialise the RequestQueue
+        requestQueue = Volley.newRequestQueue(requireContext());
+
+        //fetch and display expense data using Volloy
+        fetchAndDisplayExpensesData();
     }
+
+
+    private void fetchAndDisplayExpensesData(){
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                Request.Method.GET, FIREBASE_DATABASE_URL, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d("ViewIncomeFragment", "Response: " + response.toString());
+                        try {
+                            JSONObject userObject = response;
+
+                            JSONArray ExpensesArray = userObject.getJSONArray("Expenses");
+
+                            if (ExpensesArray != null) {
+                                for (int i = 0; i < ExpensesArray.length(); i++) {
+                                    int amount = ExpensesArray.getJSONObject(i).getInt("Amount");
+                                    Log.d("ViewIncomeFragment", "Amount: " + amount);
+                                    String date = ExpensesArray.getJSONObject(i).getString("Date");
+                                    Log.d("ViewIncomeFragment", "Date: " + date);
+                                    String description = ExpensesArray.getJSONObject(i).getString("Description");
+                                    if (description.equals("")) {
+                                        description = "No Description";
+                                    }
+
+                                    //Display Expenses to the list view
+                                    expensesList.add("Amount: " + amount + " date: " + date + " Description: " + description);
+
+                                    //Notify the adapter that the data set has been changed
+                                    adapter.notifyDataSetChanged();
+                                }
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        //handles errors
+                        error.printStackTrace();
+                    }
+                });
+
+            //add the request to the request queue
+            requestQueue.add(jsonObjectRequest);
+    }
+
+
     @Override
     public void onClick(View view) {
         //if statement to navigate to the budget page

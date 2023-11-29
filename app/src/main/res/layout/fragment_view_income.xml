@@ -11,13 +11,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/tvIncomeViewTitle"
-        app:layout_constraintBottom_toTopOf="@+id/LstExpenses"
+        app:layout_constraintBottom_toTopOf="@+id/LstIncome"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ListView
-        android:id="@+id/LstExpenses"
+        android:id="@+id/LstIncome"
         android:layout_width="408dp"
         android:layout_height="525dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -35,5 +35,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/LstExpenses" />
+        app:layout_constraintTop_toBottomOf="@+id/LstIncome" />
 </androidx.constraintlayout.widget.ConstraintLayout>
