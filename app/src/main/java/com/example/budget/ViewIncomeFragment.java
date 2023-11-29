@@ -29,7 +29,7 @@ import java.util.ArrayList;
 public class ViewIncomeFragment extends Fragment implements View.OnClickListener {
 
     //Url for the cloud databse
-    private static final String FIREBASE_DATABASE_URL = "https://weather-f9ae8-default-rtdb.firebaseio.com/User.json";
+    private static final String FIREBASE_DATABASE_URL = "https://weather-f9ae8-default-rtdb.firebaseio.com/Budget/Users.json";
 
     //Array for the income
     private ArrayList<String> incomeList;
@@ -107,29 +107,27 @@ public class ViewIncomeFragment extends Fragment implements View.OnClickListener
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        // Process the JSON data and update the ListView
                         Log.d("ViewIncomeFragment", "Response: " + response.toString());
                         try {
                             JSONObject userObject = response;
 
-                            JSONArray IncomeArray=userObject.getJSONArray("Income");
+                            JSONArray ExpensesArray = userObject.getJSONArray("Income");
 
-                            if (IncomeArray != null) {
-                                // Extract income data
-                                for(int i=0;i<IncomeArray.length();i++) {
-                                    int amount = IncomeArray.getJSONObject(i).getInt("Amount");
+                            if (ExpensesArray != null) {
+                                for (int i = 0; i < ExpensesArray.length(); i++) {
+                                    int amount = ExpensesArray.getJSONObject(i).getInt("Amount");
                                     Log.d("ViewIncomeFragment", "Amount: " + amount);
-                                    String date = IncomeArray.getJSONObject(i).getString("Date");
+                                    String date = ExpensesArray.getJSONObject(i).getString("Date");
                                     Log.d("ViewIncomeFragment", "Date: " + date);
-                                    String description = IncomeArray.getJSONObject(i).getString("Description");
+                                    String description = ExpensesArray.getJSONObject(i).getString("Description");
                                     if (description.equals("")) {
                                         description = "No Description";
                                     }
 
-                                    // Display income data in the list
-                                    incomeList.add("Amount: " + amount + ", Date: " + date + ", Description: " + description);
+                                    //Display Expenses to the list view
+                                    incomeList.add("Amount: " + amount + " date: " + date + " Description: " + description);
 
-                                    // Notify the adapter that the data set has changed
+                                    //Notify the adapter that the data set has been changed
                                     adapter.notifyDataSetChanged();
                                 }
                             }
@@ -141,12 +139,12 @@ public class ViewIncomeFragment extends Fragment implements View.OnClickListener
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        // Handle errors
+                        //handles errors
                         error.printStackTrace();
                     }
                 });
 
-        // Add the request to the RequestQueue
+        //add the request to the request queue
         requestQueue.add(jsonObjectRequest);
     }
 

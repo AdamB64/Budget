@@ -37,7 +37,7 @@ public class ViewExpensesFragment extends Fragment implements View.OnClickListen
 
 
     //url for the cloud database
-    private static final String FIREBASE_DATABASE_URL = "https://weather-f9ae8-default-rtdb.firebaseio.com/User.json";
+    private static final String FIREBASE_DATABASE_URL = "https://weather-f9ae8-default-rtdb.firebaseio.com/Budget/Users.json";
 
     //Array for the expenses
     private ArrayList<String> expensesList;

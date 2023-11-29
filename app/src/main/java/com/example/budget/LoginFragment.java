@@ -79,6 +79,11 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_login, container, false);
     }
+    @Override
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState){
+        Button LoginNavHomeButton = view.findViewById(R.id.BtnLogin);
+        LoginNavHomeButton.setOnClickListener(this);
+    }
 
     @Override
     public void onClick(View view) {

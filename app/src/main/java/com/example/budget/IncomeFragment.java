@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -104,7 +105,7 @@ public class IncomeFragment extends Fragment implements View.OnClickListener{
     @Override
     public void onClick(View view) {
         if(view.getId()==R.id.BtnAddIncome){
-            writeToDatabase();
+            writeToDatabase(this.getView());
             Navigation.findNavController(view).navigate(R.id.action_incomeFragment_to_viewIncomeFragment);
         } else if (view.getId()==R.id.btnBudgetNavInc) {
             Navigation.findNavController(view).navigate(R.id.action_incomeFragment_to_budgetFragement);
@@ -112,19 +113,24 @@ public class IncomeFragment extends Fragment implements View.OnClickListener{
             Navigation.findNavController(view).navigate(R.id.action_incomeFragment_to_viewIncomeFragment);
         }
     }
-    private void writeToDatabase() {
+    private void writeToDatabase(View view) {
+        //getting the input fields
+        String Amount = ((EditText) view.findViewById(R.id.InputIncome)).getText().toString();
+        String Date = ((EditText) view.findViewById(R.id.InputIncDate)).getText().toString();
+        String Description = ((EditText) view.findViewById(R.id.InputIncDescription)).getText().toString();
         // Assuming you have a JSONObject with the data you want to write
         JSONObject postData = new JSONObject();
         try {
-            postData.put("key1", "value1");
-            postData.put("key2", "value2");
+            postData.put("Amount", Amount);
+            postData.put("Date", Date);
+            postData.put("Description",Description);
             // Add other data fields as needed
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         // The URL to which you want to send the POST request
-        String writeUrl = "https://weather-f9ae8-default-rtdb.firebaseio.com/Budget.json";
+        String writeUrl = "https://weather-f9ae8-default-rtdb.firebaseio.com/Budget/Users/Income.json";
 
         // Create a JsonObjectRequest with POST method
         JsonObjectRequest jsonRequest = new JsonObjectRequest(
