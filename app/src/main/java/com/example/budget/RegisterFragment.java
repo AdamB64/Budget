@@ -20,8 +20,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -121,22 +119,22 @@ public class RegisterFragment extends Fragment implements View.OnClickListener{
             }else {
                 r=true;
                 // Create an array for expenses
-                JSONArray expensesArray = new JSONArray();
+                JSONObject expensesArray = new JSONObject();
                 JSONObject expenseObject = new JSONObject();
                 // You may want to get these values from the user input fields
-                expenseObject.put("Amount", 0);  // Replace with the actual amount value
-                expenseObject.put("Date", "");  // Replace with the actual date value
-                expenseObject.put("Description", "");  // Replace with the actual description value
-                expensesArray.put(expenseObject);
+                expenseObject.put("Amount", 0);
+                expenseObject.put("Date", "");
+                expenseObject.put("Description", "");
+                expensesArray.put("Expenses",expenseObject);
 
                 // Create an array for income
-                JSONArray incomeArray = new JSONArray();
+                JSONObject incomeArray = new JSONObject();
                 JSONObject incomeObject = new JSONObject();
                 // You may want to get these values from the user input fields
                 incomeObject.put("Amount", 0);  // Replace with the actual amount value
                 incomeObject.put("Date", "");  // Replace with the actual date value
                 incomeObject.put("Description", "");  // Replace with the actual description value
-                incomeArray.put(incomeObject);
+                incomeArray.put("Income",incomeObject);
 
                 // Put arrays into the JSON object
                 postData.put("UserName", userName);

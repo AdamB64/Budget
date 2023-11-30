@@ -33,7 +33,7 @@ import java.nio.BufferUnderflowException;
  * Use the {@link IncomeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class IncomeFragment extends Fragment implements View.OnClickListener{
+public class IncomeFragment extends Fragment implements View.OnClickListener {
 
     private RequestQueue requestQueue;
 
@@ -104,15 +104,17 @@ public class IncomeFragment extends Fragment implements View.OnClickListener{
 
     @Override
     public void onClick(View view) {
-        if(view.getId()==R.id.BtnAddIncome){
-            writeToDatabase(this.getView());
+        if (view.getId() == R.id.BtnAddIncome) {
+            //writeToDatabase(this.getView());
             Navigation.findNavController(view).navigate(R.id.action_incomeFragment_to_viewIncomeFragment);
-        } else if (view.getId()==R.id.btnBudgetNavInc) {
+        } else if (view.getId() == R.id.btnBudgetNavInc) {
             Navigation.findNavController(view).navigate(R.id.action_incomeFragment_to_budgetFragement);
-        } else if (view.getId()==R.id.BtnExpNavExpView) {
+        } else if (view.getId() == R.id.BtnIncNavIncView) {
             Navigation.findNavController(view).navigate(R.id.action_incomeFragment_to_viewIncomeFragment);
         }
     }
+
+    /*
     private void writeToDatabase(View view) {
         //getting the input fields
         String Amount = ((EditText) view.findViewById(R.id.InputIncome)).getText().toString();
@@ -155,6 +157,5 @@ public class IncomeFragment extends Fragment implements View.OnClickListener{
 
         // Add the request to the RequestQueue
         requestQueue.add(jsonRequest);
-    }
-
+    }*/
 }

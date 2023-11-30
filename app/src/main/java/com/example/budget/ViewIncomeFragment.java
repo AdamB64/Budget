@@ -120,7 +120,7 @@ public class ViewIncomeFragment extends Fragment implements View.OnClickListener
         requestQueue = Volley.newRequestQueue(requireContext());
 
         //fetch and display expense data using Volloy
-        fetchAndDisplayExpensesData();
+        //fetchAndDisplayExpensesData();
     }
 
 
