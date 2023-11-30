@@ -1,6 +1,5 @@
 package com.example.budget;
 
-import android.app.Activity;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -21,6 +20,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -98,12 +99,12 @@ public class RegisterFragment extends Fragment implements View.OnClickListener{
         if(view.getId()==R.id.BntRegister){
             boolean r =writeToDatabase(this.getView());
             if(r==true) {
-                Navigation.findNavController(view).navigate(R.id.action_registerFragment_to_homeFragment);
+                Navigation.findNavController(view).navigate(R.id.action_registerFragment_to_loginFragment);
             }
         }
     }
 
-    private Boolean writeToDatabase(@NonNull View view) {
+    private boolean writeToDatabase(@NonNull View view) {
         boolean r =false;
         // Retrieve data from input fields
         String userName = ((EditText) view.findViewById(R.id.InputName)).getText().toString();
@@ -143,6 +144,9 @@ public class RegisterFragment extends Fragment implements View.OnClickListener{
                 postData.put("Password", userPassword);
                 postData.put("Expenses", expensesArray);
                 postData.put("Income", incomeArray);
+                postData.put("Goal","");
+                postData.put("Budget","");
+
 
             }
         } catch (JSONException e) {
@@ -150,7 +154,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener{
         }
 
         // The URL to which you want to send the POST request
-        String writeUrl = "https://weather-f9ae8-default-rtdb.firebaseio.com/Budget/users.json";
+        String writeUrl = "https://weather-f9ae8-default-rtdb.firebaseio.com/Budget.json";
 
         // Create a JsonObjectRequest with POST method
         JsonObjectRequest jsonRequest = new JsonObjectRequest(

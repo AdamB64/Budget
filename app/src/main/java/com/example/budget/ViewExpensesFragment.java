@@ -13,11 +13,13 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
@@ -26,6 +28,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -37,7 +44,7 @@ public class ViewExpensesFragment extends Fragment implements View.OnClickListen
 
 
     //url for the cloud database
-    private static final String FIREBASE_DATABASE_URL = "https://weather-f9ae8-default-rtdb.firebaseio.com/Budget/Users.json";
+    private static final String FIREBASE_DATABASE_URL = "https://weather-f9ae8-default-rtdb.firebaseio.com/Budget/0/Users/Expenses.json";
 
     //Array for the expenses
     private ArrayList<String> expensesList;
@@ -106,7 +113,7 @@ public class ViewExpensesFragment extends Fragment implements View.OnClickListen
         listView.setAdapter(adapter);
 
         //get the button to navigate to the budget page
-        Button BudgetNavButton = view.findViewById(R.id.BtnIncBudgetNav);
+        Button BudgetNavButton = view.findViewById(R.id.BtnEpxBudgetNav);
         BudgetNavButton.setOnClickListener(this);
 
         //Initialise the RequestQueue
@@ -125,30 +132,27 @@ public class ViewExpensesFragment extends Fragment implements View.OnClickListen
                     public void onResponse(JSONObject response) {
                         Log.d("ViewIncomeFragment", "Response: " + response.toString());
                         try {
-                            JSONObject userObject = response;
+                            String userObject = response.toString();
 
-                            JSONArray ExpensesArray = userObject.getJSONArray("Expenses");
+                            // Create an ObjectMapper
+                            ObjectMapper objectMapper = new ObjectMapper();
 
-                            if (ExpensesArray != null) {
-                                for (int i = 0; i < ExpensesArray.length(); i++) {
-                                    int amount = ExpensesArray.getJSONObject(i).getInt("Amount");
-                                    Log.d("ViewIncomeFragment", "Amount: " + amount);
-                                    String date = ExpensesArray.getJSONObject(i).getString("Date");
-                                    Log.d("ViewIncomeFragment", "Date: " + date);
-                                    String description = ExpensesArray.getJSONObject(i).getString("Description");
-                                    if (description.equals("")) {
-                                        description = "No Description";
-                                    }
+                            JsonNode jsonNode = objectMapper.readTree(userObject);
 
-                                    //Display Expenses to the list view
-                                    expensesList.add("Amount: " + amount + " date: " + date + " Description: " + description);
+                            for (JsonNode entry : jsonNode) {
+                                int amount = entry.get("Amount").asInt();
+                                String date = entry.get("Date").asText();
+                                String description = entry.get("Description").asText();
 
-                                    //Notify the adapter that the data set has been changed
-                                    adapter.notifyDataSetChanged();
-                                }
+                                Log.d("ViewIncomeFragment", "Response: " + amount+date+description);
+
+                                // Display Expenses to the list view
+                                expensesList.add("Amount: " + amount + ", Date: " + date + ", Description: " + description);
+                                // Notify the adapter that the data set has been changed
+                                adapter.notifyDataSetChanged();
                             }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                        }catch (JsonProcessingException e) {
+                            throw new RuntimeException(e);
                         }
                     }
                 },
@@ -168,7 +172,7 @@ public class ViewExpensesFragment extends Fragment implements View.OnClickListen
     @Override
     public void onClick(View view) {
         //if statement to navigate to the budget page
-        if(view.getId()==R.id.BtnIncBudgetNav){
+        if(view.getId()==R.id.BtnEpxBudgetNav){
             Navigation.findNavController(view).navigate(R.id.action_viewExpensesFragment_to_budgetFragement);
         }
     }
