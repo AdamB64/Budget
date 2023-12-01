@@ -99,7 +99,7 @@ public class ViewIncomeFragment extends Fragment implements View.OnClickListener
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_view_expenses, container, false);
+        return inflater.inflate(R.layout.fragment_view_income, container, false);
     }
 
     @Override
@@ -120,11 +120,12 @@ public class ViewIncomeFragment extends Fragment implements View.OnClickListener
         requestQueue = Volley.newRequestQueue(requireContext());
 
         //fetch and display expense data using Volloy
-        //fetchAndDisplayExpensesData();
+        fetchAndDisplayExpensesData();
     }
 
 
     private void fetchAndDisplayExpensesData(){
+        incomeList.clear();
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                 Request.Method.GET, FIREBASE_DATABASE_URL, null,
                 new Response.Listener<JSONObject>() {

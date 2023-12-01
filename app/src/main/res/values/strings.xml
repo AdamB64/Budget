@@ -59,7 +59,9 @@
 
     <!--String resources for the income view fragment-->
     <string name="tvIncomeViewTitle">See below all the income with dates and description if added</string>
+    <string name="tvRefreshExp">Refresh list</string>
 
     <!--String resources for the expenses view fragment-->
     <string name="tvExpensesViewTitle">See below all the expenses with dates and description if added</string>
+    <string name="tvRefreshInc">Refresh list</string>
 </resources>

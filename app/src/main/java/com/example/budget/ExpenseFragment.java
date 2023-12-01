@@ -34,6 +34,7 @@ import java.nio.BufferUnderflowException;
  */
 public class ExpenseFragment extends Fragment implements View.OnClickListener{
 
+    private RequestQueue requestQueue;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -84,6 +85,8 @@ public class ExpenseFragment extends Fragment implements View.OnClickListener{
 
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        requestQueue = Volley.newRequestQueue(requireContext());
+
         //get the button to navigate to the expenses view page
         Button ExpensesAddButton = view.findViewById(R.id.BtnAddExpense);
         ExpensesAddButton.setOnClickListener(this);
@@ -99,11 +102,56 @@ public class ExpenseFragment extends Fragment implements View.OnClickListener{
     @Override
     public void onClick(View view) {
         if(view.getId()==R.id.BtnAddExpense){
+            writeToDatabase(this.getView());
             Navigation.findNavController(view).navigate(R.id.action_expenseFragment_to_viewExpensesFragment);
         } else if (view.getId()==R.id.BtnBudgetNavExp) {
             Navigation.findNavController(view).navigate(R.id.action_expenseFragment_to_budgetFragement);
         } else if (view.getId()==R.id.BtnExpNavExpView) {
             Navigation.findNavController(view).navigate(R.id.action_expenseFragment_to_viewExpensesFragment);
         }
+    }
+
+    private void writeToDatabase(View view) {
+        //getting the input fields
+        String Amount = ((EditText) view.findViewById(R.id.InputExpense)).getText().toString();
+        String Date = ((EditText) view.findViewById(R.id.InputExpDate)).getText().toString();
+        String Description = ((EditText) view.findViewById(R.id.InputExpDescription)).getText().toString();
+        // Assuming you have a JSONObject with the data you want to write
+        JSONObject postData = new JSONObject();
+        try {
+            postData.put("Amount", Amount);
+            postData.put("Date", Date);
+            postData.put("Description",Description);
+            // Add other data fields as needed
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        // The URL to which you want to send the POST request
+        String writeUrl = "https://weather-f9ae8-default-rtdb.firebaseio.com/Budget/0/Users/Expenses.json";
+
+        // Create a JsonObjectRequest with POST method
+        JsonObjectRequest jsonRequest = new JsonObjectRequest(
+                Request.Method.POST, writeUrl, postData,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        // Handle the response from the server after writing data
+                        // You may want to update your UI or perform other actions
+                        // based on the server's response
+                        Log.d("WriteToDatabase", "Write successful");
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // Handle errors that occurred during the request
+                        error.printStackTrace();
+                        Log.e("WriteToDatabase", "Error writing to database");
+                    }
+                });
+
+        // Add the request to the RequestQueue
+        requestQueue.add(jsonRequest);
     }
 }

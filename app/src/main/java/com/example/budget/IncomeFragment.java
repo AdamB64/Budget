@@ -105,7 +105,7 @@ public class IncomeFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.BtnAddIncome) {
-            //writeToDatabase(this.getView());
+            writeToDatabase(this.getView());
             Navigation.findNavController(view).navigate(R.id.action_incomeFragment_to_viewIncomeFragment);
         } else if (view.getId() == R.id.btnBudgetNavInc) {
             Navigation.findNavController(view).navigate(R.id.action_incomeFragment_to_budgetFragement);
@@ -114,7 +114,7 @@ public class IncomeFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    /*
+
     private void writeToDatabase(View view) {
         //getting the input fields
         String Amount = ((EditText) view.findViewById(R.id.InputIncome)).getText().toString();
@@ -132,7 +132,7 @@ public class IncomeFragment extends Fragment implements View.OnClickListener {
         }
 
         // The URL to which you want to send the POST request
-        String writeUrl = "https://weather-f9ae8-default-rtdb.firebaseio.com/Budget/Users/Income.json";
+        String writeUrl = "https://weather-f9ae8-default-rtdb.firebaseio.com/Budget/0/Users/Income.json";
 
         // Create a JsonObjectRequest with POST method
         JsonObjectRequest jsonRequest = new JsonObjectRequest(
@@ -157,5 +157,5 @@ public class IncomeFragment extends Fragment implements View.OnClickListener {
 
         // Add the request to the RequestQueue
         requestQueue.add(jsonRequest);
-    }*/
+    }
 }
