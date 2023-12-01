@@ -143,7 +143,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener{
                 postData.put("Expenses", expensesArray);
                 postData.put("Income", incomeArray);
                 postData.put("Goal","");
-                postData.put("Budget","");
+                postData.put("TotalBudget","");
 
 
             }

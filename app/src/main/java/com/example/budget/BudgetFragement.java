@@ -6,17 +6,38 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Iterator;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link BudgetFragement#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class BudgetFragement extends Fragment implements View.OnClickListener{
+public class BudgetFragement extends Fragment implements View.OnClickListener {
+
+    private RequestQueue requestQueue;
+
+    private TextView budgetInputTextView;
+
+    private TextView GoalInputTextView;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -64,8 +85,15 @@ public class BudgetFragement extends Fragment implements View.OnClickListener{
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.budget_fragement, container, false);
     }
+
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        requestQueue = Volley.newRequestQueue(requireContext());
+
+        budgetInputTextView = view.findViewById(R.id.BudgetInput);
+
+        GoalInputTextView=view.findViewById(R.id.GoalInput);
+
         //getting the button to navigate to the income fragment
         Button IncomeNavButton = view.findViewById(R.id.BtnIncomeNav2);
         IncomeNavButton.setOnClickListener(this);
@@ -80,6 +108,8 @@ public class BudgetFragement extends Fragment implements View.OnClickListener{
 
         Button GoalNavButton = view.findViewById(R.id.BtnGoalNavBudget);
         GoalNavButton.setOnClickListener(this);
+        // Make a request to the Firebase link
+        makeRequest();
     }
     @Override
     public void onClick(View view) {
@@ -97,5 +127,42 @@ public class BudgetFragement extends Fragment implements View.OnClickListener{
             //navigate to the goal fragment
             Navigation.findNavController(view).navigate(R.id.action_budgetFragement_to_goalsFragment);
         }
+    }
+
+    private void makeRequest() {
+        String url = "https://weather-f9ae8-default-rtdb.firebaseio.com/Budget/0/.json";
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d("BudgetFragment", "Response received: " + response.toString());
+
+                        try {
+                            // Parse the JSON data
+                            JSONObject placeHolder = response.getJSONObject("Users");
+
+                            double budget = placeHolder.getDouble("TotalBudget");
+
+                            double goal = placeHolder.getDouble("Goal");
+
+                            // Update the TextView with the result
+                            budgetInputTextView.setText(String.format("Budget: %.2f", budget));
+                            GoalInputTextView.setText("Goal: "+ goal+"%");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Log.e("BudgetFragment", "JSONException: " + e.getMessage());
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // Handle error
+                        Log.e("BudgetFragment", "VolleyError: " + error.toString());
+                    }
+                });
+
+        requestQueue.add(jsonObjectRequest);
     }
 }
