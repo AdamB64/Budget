@@ -21,7 +21,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
@@ -95,6 +94,9 @@ public class GoalsFragment extends Fragment implements View.OnClickListener{
 
         Button ExpensesButton = view.findViewById(R.id.BtnGoalNavExp);
         ExpensesButton.setOnClickListener(this);
+
+        Button AddGoalsButton = view.findViewById(R.id.BtnAddGoals);
+        AddGoalsButton.setOnClickListener(this);
     }
 
     @Override
@@ -106,12 +108,12 @@ public class GoalsFragment extends Fragment implements View.OnClickListener{
         } else if (view.getId()==R.id.BtnGoalNavInc) {
             Navigation.findNavController(view).navigate(R.id.action_goalsFragment_to_incomeFragment);
         } else if (view.getId() == R.id.BtnAddGoals) {
-            goalReplaced = this.getView().findViewById(R.id.editTextText);
-            GoalReplace(requireContext(), goalReplaced.getText().toString());
+            goalReplaced = this.getView().findViewById(R.id.NewGoalInput);
+            GoalReplace(goalReplaced.getText().toString(),requireContext());
         }
     }
 
-    public static void GoalReplace(final Context context, final String newGoal) {
+    public static void GoalReplace(final String newGoal,final Context context) {
         // Your Firebase Realtime Database URL
         String url = "https://weather-f9ae8-default-rtdb.firebaseio.com/Budget/0/Users/Goal.json";
 
@@ -139,7 +141,14 @@ public class GoalsFragment extends Fragment implements View.OnClickListener{
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             // Handle errors
-                            Toast.makeText(context, "Error updating goal: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                            String errorMessage;
+                            if (error.networkResponse != null && error.networkResponse.data != null) {
+                                errorMessage = new String(error.networkResponse.data);
+                            } else {
+                                errorMessage = "Unknown error";
+                            }
+
+                            Toast.makeText(context, "Error updating goal: " + errorMessage, Toast.LENGTH_SHORT).show();
                         }
                     });
 

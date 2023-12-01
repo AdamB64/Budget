@@ -36,7 +36,7 @@
     <string name="tvGoalNav">Click here to go to goals</string>
 
     <!--String resources for the Goal fragment-->
-    <string name="tvGoalTitle">Here you can see your goal and also update it</string>
+    <string name="tvGoalTitle">Here you can update your goals</string>
     <string name="tvTextGoal">See goal below</string>
     <string name="tvNewGoal">Type new Goal here</string>
     <string name="tvSetGoal">Apply new goal</string>

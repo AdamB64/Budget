@@ -144,8 +144,8 @@ public class BudgetFragement extends Fragment implements View.OnClickListener {
                             JSONObject placeHolder = response.getJSONObject("Users");
 
                             double budget = placeHolder.getDouble("TotalBudget");
-
-                            double goal = placeHolder.getDouble("Goal");
+                            JSONObject GoalObject = placeHolder.getJSONObject("Goal");
+                            double goal = GoalObject.getDouble("Goal");
 
                             // Update the TextView with the result
                             budgetInputTextView.setText(String.format("Budget: %.2f", budget));
