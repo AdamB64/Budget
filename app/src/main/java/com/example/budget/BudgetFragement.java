@@ -108,6 +108,7 @@ public class BudgetFragement extends Fragment implements View.OnClickListener {
 
         Button GoalNavButton = view.findViewById(R.id.BtnGoalNavBudget);
         GoalNavButton.setOnClickListener(this);
+
         // Make a request to the Firebase link
         makeRequest();
     }
@@ -148,7 +149,7 @@ public class BudgetFragement extends Fragment implements View.OnClickListener {
 
                             // Update the TextView with the result
                             budgetInputTextView.setText(String.format("Budget: %.2f", budget));
-                            GoalInputTextView.setText("Goal: "+ goal+"%");
+                            GoalInputTextView.setText("Goal: "+ ((goal-budget)/goal)+"%");
                         } catch (JSONException e) {
                             e.printStackTrace();
                             Log.e("BudgetFragment", "JSONException: " + e.getMessage());
