@@ -98,7 +98,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
         //going to the home fragment if button clicked
         if(view.getId()== R.id.BtnLogin){
             login(this.getView());
-                Toast.makeText(getContext(), "Login Successful", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), R.string.tvUserLogin, Toast.LENGTH_SHORT).show();
         }
     }
 

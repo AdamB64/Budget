@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -24,9 +25,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import java.nio.BufferUnderflowException;
+import java.util.Date;
 import java.util.Iterator;
 
 /**
@@ -45,6 +49,7 @@ public class IncomeFragment extends Fragment implements View.OnClickListener {
 
     private String firstKey;
 
+    public boolean login;
 
     //parameters
     private String mUsername;
@@ -110,7 +115,11 @@ public class IncomeFragment extends Fragment implements View.OnClickListener {
         bundle.putString(UsernamePassed,this.mUsername);
         if (view.getId() == R.id.BtnAddIncome) {
             writeToDatabase(this.getView());
-            Navigation.findNavController(view).navigate(R.id.action_incomeFragment_to_viewIncomeFragment,bundle);
+            if(login==true) {
+                Navigation.findNavController(view).navigate(R.id.action_incomeFragment_to_viewIncomeFragment, bundle);
+            }else {
+                Toast.makeText(getContext(), R.string.tvErrorDate, Toast.LENGTH_SHORT).show();
+            }
         } else if (view.getId() == R.id.btnBudgetNavInc) {
             Navigation.findNavController(view).navigate(R.id.action_incomeFragment_to_budgetFragement,bundle);
         } else if (view.getId() == R.id.BtnIncNavIncView) {
@@ -160,45 +169,71 @@ public class IncomeFragment extends Fragment implements View.OnClickListener {
     private void performPostRequest(String key,View view) {
         //getting the input fields
         String Amount = ((EditText) view.findViewById(R.id.InputIncome)).getText().toString();
-        String Date = ((EditText) view.findViewById(R.id.InputIncDate)).getText().toString();
+        String date = ((EditText) view.findViewById(R.id.InputIncDate)).getText().toString();
         String Description = ((EditText) view.findViewById(R.id.InputIncDescription)).getText().toString();
-        // Assuming you have a JSONObject with the data you want to write
-        JSONObject postData = new JSONObject();
-        try {
-            postData.put("Amount", Amount);
-            postData.put("Date", Date);
-            postData.put("Description",Description);
-            // Add other data fields as needed
-        } catch (JSONException e) {
-            e.printStackTrace();
+        if(Description.matches("Type here a description for the income if wanted")){
+            Description="";
+        }
+        if(isValidDate(date)) {
+            if (Amount.matches("[0-9]+")) {
+                login = true;
+                // Assuming you have a JSONObject with the data you want to write
+                JSONObject postData = new JSONObject();
+                try {
+                    postData.put("Amount", Amount);
+                    postData.put("Date", date);
+                    postData.put("Description", Description);
+                    // Add other data fields as needed
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                // The URL to post data
+                String writeUrl = "https://weather-f9ae8-default-rtdb.firebaseio.com/Budget/" + this.mUsername + "/" + key + "/Income.json";
+
+                // Create a JsonObjectRequest with POST method
+                JsonObjectRequest jsonRequest = new JsonObjectRequest(
+                        Request.Method.POST, writeUrl, postData,
+                        new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                // Handle the response from the server after writing data
+                                // You may want to update your UI or perform other actions
+                                // based on the server's response
+                                Log.d("WriteToDatabase", "Write successful");
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                // Handle errors that occurred during the request
+                                error.printStackTrace();
+                                Log.e("WriteToDatabase", "Error writing to database");
+                            }
+                        });
+
+                // Add the request to the RequestQueue
+                requestQueue.add(jsonRequest);
+            }
+            Toast.makeText(getContext(), R.string.tvErrorAmount, Toast.LENGTH_SHORT).show();
         }
 
-        // The URL to post data
-        String writeUrl = "https://weather-f9ae8-default-rtdb.firebaseio.com/Budget/" + this.mUsername + "/" + key + "/Income.json";
+    }
 
-        // Create a JsonObjectRequest with POST method
-        JsonObjectRequest jsonRequest = new JsonObjectRequest(
-                Request.Method.POST, writeUrl, postData,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        // Handle the response from the server after writing data
-                        // You may want to update your UI or perform other actions
-                        // based on the server's response
-                        Log.d("WriteToDatabase", "Write successful");
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // Handle errors that occurred during the request
-                        error.printStackTrace();
-                        Log.e("WriteToDatabase", "Error writing to database");
-                    }
-                });
+    private static boolean isValidDate(String dateStr) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        sdf.setLenient(false);  // This ensures strict validation
 
-        // Add the request to the RequestQueue
-        requestQueue.add(jsonRequest);
+        try {
+            // Try parsing the date
+            Date date = sdf.parse(dateStr);
+
+            // If parsing succeeds, it's a valid date
+            return true;
+        } catch (ParseException e) {
+            // Parsing failed, not a valid date
+            return false;
+        }
     }
 
 }

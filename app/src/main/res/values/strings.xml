@@ -44,7 +44,7 @@
     <!--String resources for the income fragment-->
     <string name="tvIncomeTitle">Here is where you can add new income to add more to your budget</string>
     <string name="tvIncomeAmount">Type here the amount earned</string>
-    <string name="tvIncomeDate">Type here the date earned</string>
+    <string name="tvIncomeDate">Type here the date earned (dd/MM/yyyy)</string>
     <string name="tvIncomeDescription">Type here a description for the income if wanted</string>
     <string name="tvSetIncome">Add Income</string>
     <string name="tvIncomeView">Click here to see incomes</string>
@@ -64,4 +64,12 @@
     <!--String resources for the expenses view fragment-->
     <string name="tvExpensesViewTitle">See below all the expenses with dates and description if added</string>
     <string name="tvRefreshInc">Refresh list</string>
+
+    <!--error string resources and user notifications-->
+    <string name="tvErrorDate">not a valid date</string>
+    <string name="tvErrorAmount">Amount must be a number</string>
+    <string name="tvUserLogin">Login Successful</string>
+    <string name="tvUsernameError">Username and password must not contain spaces</string>
+    <string name="tvInputError">Must have input in all fields</string>
+    <string name="tvRegisterComplete">Account made</string>
 </resources>

@@ -35,18 +35,17 @@ public class BudgetFragement extends Fragment implements View.OnClickListener {
 
     private RequestQueue requestQueue;
 
+    private RequestQueue requestQueue2;
+
+    private String firstKey;
+
     private TextView budgetInputTextView;
 
     private TextView GoalInputTextView;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private final static String UsernamePassed=HomeFragment.UsernamePassed;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private String mUsername;
 
     public BudgetFragement() {
         // Required empty public constructor
@@ -56,16 +55,14 @@ public class BudgetFragement extends Fragment implements View.OnClickListener {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     * @param Username the users username
      * @return A new instance of fragment BudgetFragement.
      */
     // TODO: Rename and change types and number of parameters
-    public static BudgetFragement newInstance(String param1, String param2) {
+    public static BudgetFragement newInstance(String Username) {
         BudgetFragement fragment = new BudgetFragement();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString(UsernamePassed, Username);
         fragment.setArguments(args);
         return fragment;
     }
@@ -74,8 +71,7 @@ public class BudgetFragement extends Fragment implements View.OnClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            this.mUsername = getArguments().getString(UsernamePassed);
         }
     }
 
@@ -89,6 +85,8 @@ public class BudgetFragement extends Fragment implements View.OnClickListener {
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         requestQueue = Volley.newRequestQueue(requireContext());
+
+        requestQueue2= Volley.newRequestQueue(requireContext());
 
         budgetInputTextView = view.findViewById(R.id.BudgetInput);
 
@@ -110,41 +108,78 @@ public class BudgetFragement extends Fragment implements View.OnClickListener {
         GoalNavButton.setOnClickListener(this);
 
         // Make a request to the Firebase link
-        makeRequest();
+        getUserKey(this.getView());
     }
     @Override
     public void onClick(View view) {
+        Bundle bundle = new Bundle();
+        bundle.putString(UsernamePassed,this.mUsername);
         //a if statement for going to the different fragment and making sure it the right fragment
         if(view.getId()==R.id.BtnIncomeNav2){
             //navigate to the income fragment
-            Navigation.findNavController(view).navigate(R.id.action_budgetFragement_to_incomeFragment);
+            Navigation.findNavController(view).navigate(R.id.action_budgetFragement_to_incomeFragment,bundle);
         }else if(view.getId()==R.id.BtnExpensesNav2){
             //navigate to the expenses fragment
-            Navigation.findNavController(view).navigate(R.id.action_budgetFragement_to_expenseFragment);
+            Navigation.findNavController(view).navigate(R.id.action_budgetFragement_to_expenseFragment,bundle);
         } else if (view.getId()==R.id.BtnHome) {
             //navigate to the home fragment
-            Navigation.findNavController(view).navigate(R.id.action_budgetFragement_to_homeFragment);
+            Navigation.findNavController(view).navigate(R.id.action_budgetFragement_to_homeFragment,bundle);
         } else if (view.getId()==R.id.BtnGoalNavBudget) {
             //navigate to the goal fragment
-            Navigation.findNavController(view).navigate(R.id.action_budgetFragement_to_goalsFragment);
+            Navigation.findNavController(view).navigate(R.id.action_budgetFragement_to_goalsFragment,bundle);
         }
     }
 
-    private void makeRequest() {
-        String url = "https://weather-f9ae8-default-rtdb.firebaseio.com/Budget/0/.json";
+    private void getUserKey(View view) {
+        // The URL to get data
+        String readUrl = "https://weather-f9ae8-default-rtdb.firebaseio.com/Budget/"+mUsername+"/.json";
+
+        JsonObjectRequest jsonRequest2 = new JsonObjectRequest(
+                Request.Method.GET, readUrl, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response2) {
+                        try {
+                            // Handle the response
+
+                            // Get the first key in the response
+                            Iterator<String> keys = response2.keys();
+                            if (keys.hasNext()) {
+                                firstKey = keys.next();
+                                // Call the method to perform the POST request with the obtained key
+                                makeRequest(firstKey);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Log.e("WriteToDatabase", "Error handling GET response");
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // Handle errors that occurred during the request
+                        error.printStackTrace();
+                        Log.e("WriteToDatabase", "Error reading from database");
+                    }
+                });
+
+        // Add the request to the RequestQueue
+        requestQueue2.add(jsonRequest2);
+    }
+    public void makeRequest(String key) {
+        String url = "https://weather-f9ae8-default-rtdb.firebaseio.com/Budget/"+this.mUsername+"/"+key+".json";
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.d("BudgetFragment", "Response received: " + response.toString());
-
                         try {
+                            Log.d("BudgetFragment", "Response received: " + response.toString());
                             // Parse the JSON data
-                            JSONObject placeHolder = response.getJSONObject("Users");
 
-                            double budget = placeHolder.getDouble("TotalBudget");
-                            JSONObject GoalObject = placeHolder.getJSONObject("Goal");
+                            double budget = response.getDouble("TotalBudget");
+                            JSONObject GoalObject = response.getJSONObject("Goal");
                             double goal = GoalObject.getDouble("Goal");
 
                             // Update the TextView with the result

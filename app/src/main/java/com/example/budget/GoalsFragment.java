@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,8 @@ import com.android.volley.toolbox.Volley;
 
 import org.json.JSONObject;
 
+import java.util.Iterator;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link GoalsFragment#newInstance} factory method to
@@ -34,14 +37,13 @@ public class GoalsFragment extends Fragment implements View.OnClickListener{
 
     private RequestQueue requestQueue;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private String firstKey;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private RequestQueue requestQueue2;
+
+    private static final String UsernamePassed = HomeFragment.UsernamePassed;
+
+    private String mUsername;
 
     public GoalsFragment() {
         // Required empty public constructor
@@ -51,16 +53,14 @@ public class GoalsFragment extends Fragment implements View.OnClickListener{
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     * @param Username to get the right user
      * @return A new instance of fragment GoalsFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static GoalsFragment newInstance(String param1, String param2) {
+    public static GoalsFragment newInstance(String Username) {
         GoalsFragment fragment = new GoalsFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString(UsernamePassed, Username);
         fragment.setArguments(args);
         return fragment;
     }
@@ -69,8 +69,7 @@ public class GoalsFragment extends Fragment implements View.OnClickListener{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            this.mUsername = getArguments().getString(UsernamePassed);
         }
     }
 
@@ -84,6 +83,8 @@ public class GoalsFragment extends Fragment implements View.OnClickListener{
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         requestQueue = Volley.newRequestQueue(requireContext());
+
+        requestQueue2 = Volley.newRequestQueue(requireContext());
 
         //getting the buttons to nav to budget, income and expense fragments
         Button BudgetNavButton = view.findViewById(R.id.BtnBudgetNavInc);
@@ -101,21 +102,61 @@ public class GoalsFragment extends Fragment implements View.OnClickListener{
 
     @Override
     public void onClick(View view) {
+        Bundle bundle = new Bundle();
+        bundle.putString(UsernamePassed,this.mUsername);
         if(view.getId()==R.id.BtnBudgetNavInc){
-            Navigation.findNavController(view).navigate(R.id.action_goalsFragment_to_budgetFragement);
+            Navigation.findNavController(view).navigate(R.id.action_goalsFragment_to_budgetFragement,bundle);
         } else if (view.getId()==R.id.BtnGoalNavExp) {
-            Navigation.findNavController(view).navigate(R.id.action_goalsFragment_to_expenseFragment);
+            Navigation.findNavController(view).navigate(R.id.action_goalsFragment_to_expenseFragment,bundle);
         } else if (view.getId()==R.id.BtnGoalNavInc) {
-            Navigation.findNavController(view).navigate(R.id.action_goalsFragment_to_incomeFragment);
+            Navigation.findNavController(view).navigate(R.id.action_goalsFragment_to_incomeFragment,bundle);
         } else if (view.getId() == R.id.BtnAddGoals) {
             goalReplaced = this.getView().findViewById(R.id.NewGoalInput);
-            GoalReplace(goalReplaced.getText().toString(),requireContext());
+            writeToDatabase(this.getView());
         }
     }
 
-    public static void GoalReplace(final String newGoal,final Context context) {
+    private void writeToDatabase(View view) {
+        // The URL to get data
+        String readUrl = "https://weather-f9ae8-default-rtdb.firebaseio.com/Budget/"+mUsername+"/.json";
+
+        JsonObjectRequest jsonRequest2 = new JsonObjectRequest(
+                Request.Method.GET, readUrl, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response2) {
+                        try {
+                            // Handle the response
+
+                            // Get the first key in the response
+                            Iterator<String> keys = response2.keys();
+                            if (keys.hasNext()) {
+                                firstKey = keys.next();
+                                // Call the method to perform the POST request with the obtained key
+                                GoalReplace(goalReplaced.getText().toString(),requireContext(),firstKey);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Log.e("WriteToDatabase", "Error handling GET response");
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // Handle errors that occurred during the request
+                        error.printStackTrace();
+                        Log.e("WriteToDatabase", "Error reading from database");
+                    }
+                });
+
+        // Add the request to the RequestQueue
+        requestQueue2.add(jsonRequest2);
+    }
+
+    public void GoalReplace(final String newGoal,final Context context,String key) {
         // Your Firebase Realtime Database URL
-        String url = "https://weather-f9ae8-default-rtdb.firebaseio.com/Budget/0/Users/Goal.json";
+        String url = "https://weather-f9ae8-default-rtdb.firebaseio.com/Budget/"+this.mUsername+"/"+key+"/Goal.json";
 
         // Make a network request using Volley
         RequestQueue requestQueue = Volley.newRequestQueue(context);

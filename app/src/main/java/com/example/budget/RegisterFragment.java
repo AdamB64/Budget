@@ -97,6 +97,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener{
         if(view.getId()==R.id.BntRegister){
             boolean r =writeToDatabase(this.getView());
             if(r==true) {
+                Toast.makeText(getContext(), R.string.tvRegisterComplete, Toast.LENGTH_SHORT).show();
                 Navigation.findNavController(view).navigate(R.id.action_registerFragment_to_loginFragment);
             }
         }
@@ -111,8 +112,10 @@ public class RegisterFragment extends Fragment implements View.OnClickListener{
         JSONObject postData = new JSONObject();
         try {
             if(userName.isEmpty()==true || userPassword.isEmpty()==true) {
-                Toast.makeText(getContext(), "Must have input in all fields", Toast.LENGTH_SHORT).show();
-            }else {
+                Toast.makeText(getContext(), R.string.tvInputError, Toast.LENGTH_SHORT).show();
+            } else if (userName.contains(" ")|| userPassword.contains(" ")) {
+                Toast.makeText(getContext(), R.string.tvUsernameError, Toast.LENGTH_SHORT).show();
+            } else {
                 r=true;
                 // Create an array for expenses
                 JSONObject expensesArray = new JSONObject();
@@ -138,7 +141,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener{
                 postData.put("Expenses", expensesArray);
                 postData.put("Income", incomeArray);
                 postData.put("Goal","");
-                postData.put("TotalBudget","");
+                postData.put("TotalBudget",0);
 
 
             }
