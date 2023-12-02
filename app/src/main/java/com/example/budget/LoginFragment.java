@@ -43,7 +43,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
 
     private RequestQueue requestQueue;
 
-
+    public final static String UsernamePassed ="Username";
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -51,7 +51,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
-    private String mUsername;
+    //private String mUsername;
 
     public LoginFragment() {
         // Required empty public constructor
@@ -94,25 +94,18 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
 
         Button LoginNavHomeButton = view.findViewById(R.id.BtnLogin);
         LoginNavHomeButton.setOnClickListener(this);
-        Toast.makeText(getContext(), "Username"+this.mUsername, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onClick(View view) {
         //going to the home fragment if button clicked
         if(view.getId()== R.id.BtnLogin){
-            boolean loginTrue=login(this.getView());
-            if (loginTrue==true) {
-                Navigation.findNavController(view).navigate(R.id.action_loginFragment_to_homeFragment);
+            login(this.getView());
                 Toast.makeText(getContext(), "Login Successful", Toast.LENGTH_SHORT).show();
-            }else {
-                Toast.makeText(getContext(), "User doesn't exist or password wrong", Toast.LENGTH_SHORT).show();
-            }
         }
     }
 
-    private boolean login(View view){
-        final boolean[] loginTrue = {false};
+    private void login(View view){
 
         //get the user inputted username
         EditText userNameEditText = view.findViewById(R.id.Input_name);
@@ -144,7 +137,12 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
 
                                     Toast.makeText(getContext(), "pass and username: "+Username+" "+ Password, Toast.LENGTH_SHORT).show();
                                     if(Username.equals(UserName) && Password.equals(PasswordInput)){
-                                        loginTrue[0] = true;
+                                        Bundle bundle = new Bundle();
+                                        bundle.putString(UsernamePassed,Username);
+                                        Toast.makeText(getContext(), "Login Successful", Toast.LENGTH_SHORT).show();
+                                        Navigation.findNavController(view).navigate(R.id.action_loginFragment_to_homeFragment);
+                                    }else{
+                                        Toast.makeText(getContext(), "User doesn't exist or password wrong", Toast.LENGTH_SHORT).show();
                                     }
                                 // Do something with the first object
                                 Log.d("WriteToDatabase", "First object found: " + firstObject.toString());
@@ -170,6 +168,5 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
 
         // Add the request to the RequestQueue
         requestQueue.add(jsonRequest);
-        return loginTrue[0];
     }
 }
