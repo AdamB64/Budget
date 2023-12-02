@@ -22,6 +22,9 @@
         <action
             android:id="@+id/action_budgetFragement_to_goalsFragment"
             app:destination="@id/goalsFragment" />
+        <argument
+            android:name="Username"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/expenseFragment"
@@ -34,6 +37,9 @@
         <action
             android:id="@+id/action_expenseFragment_to_budgetFragement"
             app:destination="@id/budgetFragement" />
+        <argument
+            android:name="Username"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/goalsFragment"
@@ -67,6 +73,8 @@
         <action
             android:id="@+id/action_homeFragment_to_goalsFragment"
             app:destination="@id/goalsFragment" />
+        <argument android:name="Username"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/incomeFragment"
@@ -79,6 +87,8 @@
         <action
             android:id="@+id/action_incomeFragment_to_budgetFragement"
             app:destination="@id/budgetFragement" />
+        <argument android:name="Username"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
@@ -88,6 +98,9 @@
         <action
             android:id="@+id/action_loginFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
+        <argument
+            android:name="Username"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/registerFragment"
