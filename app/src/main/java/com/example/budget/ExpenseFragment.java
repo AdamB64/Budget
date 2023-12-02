@@ -141,7 +141,7 @@ public class ExpenseFragment extends Fragment implements View.OnClickListener{
                             if (keys.hasNext()) {
                                 firstKey = keys.next();
                                 // Call the method to perform the POST request with the obtained key
-                                performPostRequest(firstKey,view);
+                                performPostRequest(firstKey,ExpenseFragment.this.getView());
                             }
                         } catch (Exception e) {
                             e.printStackTrace();

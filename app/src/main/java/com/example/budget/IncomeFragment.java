@@ -114,10 +114,10 @@ public class IncomeFragment extends Fragment implements View.OnClickListener {
         Bundle bundle=new Bundle();
         bundle.putString(UsernamePassed,this.mUsername);
         if (view.getId() == R.id.BtnAddIncome) {
-            writeToDatabase(this.getView());
+            writeToDatabase();
             if(login==true) {
                 Navigation.findNavController(view).navigate(R.id.action_incomeFragment_to_viewIncomeFragment, bundle);
-            }else {
+            }else{
                 Toast.makeText(getContext(), R.string.tvErrorDate, Toast.LENGTH_SHORT).show();
             }
         } else if (view.getId() == R.id.btnBudgetNavInc) {
@@ -128,7 +128,7 @@ public class IncomeFragment extends Fragment implements View.OnClickListener {
     }
 
 
-    private void writeToDatabase(View view) {
+    private void writeToDatabase() {
         // The URL to get data
         String readUrl = "https://weather-f9ae8-default-rtdb.firebaseio.com/Budget/"+mUsername+"/.json";
 
@@ -145,7 +145,7 @@ public class IncomeFragment extends Fragment implements View.OnClickListener {
                             if (keys.hasNext()) {
                                 firstKey = keys.next();
                                 // Call the method to perform the POST request with the obtained key
-                                performPostRequest(firstKey,view);
+                                performPostRequest(firstKey,IncomeFragment.this.getView());
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
