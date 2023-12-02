@@ -27,6 +27,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import java.nio.BufferUnderflowException;
+import java.util.Iterator;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -37,14 +38,18 @@ public class IncomeFragment extends Fragment implements View.OnClickListener {
 
     private RequestQueue requestQueue;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private  RequestQueue requestQueue2;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    // the fragment initialization parameters
+    private static final String UsernamePassed = HomeFragment.UsernamePassed;
+
+    private String firstKey;
+
+
+    //parameters
+    private String mUsername;
+
+
 
     public IncomeFragment() {
         // Required empty public constructor
@@ -53,17 +58,13 @@ public class IncomeFragment extends Fragment implements View.OnClickListener {
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     * @param Username User username
      * @return A new instance of fragment IncomeFragment.
      */
-    // TODO: Rename and change types and number of parameters
-    public static IncomeFragment newInstance(String param1, String param2) {
+    public static IncomeFragment newInstance(String Username) {
         IncomeFragment fragment = new IncomeFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString(UsernamePassed, Username);
         fragment.setArguments(args);
         return fragment;
     }
@@ -72,8 +73,7 @@ public class IncomeFragment extends Fragment implements View.OnClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            this.mUsername = getArguments().getString(UsernamePassed);
         }
     }
 
@@ -86,8 +86,10 @@ public class IncomeFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
-        // Initialize the RequestQueue
+        // Initialize the RequestQueues
         requestQueue = Volley.newRequestQueue(requireContext());
+
+        requestQueue2=Volley.newRequestQueue(requireContext());
 
         //getting the button that navigate to the income view fragment
         Button IncomeAddButton = view.findViewById(R.id.BtnAddIncome);
@@ -104,18 +106,58 @@ public class IncomeFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
+        Bundle bundle=new Bundle();
+        bundle.putString(UsernamePassed,this.mUsername);
         if (view.getId() == R.id.BtnAddIncome) {
             writeToDatabase(this.getView());
-            Navigation.findNavController(view).navigate(R.id.action_incomeFragment_to_viewIncomeFragment);
+            Navigation.findNavController(view).navigate(R.id.action_incomeFragment_to_viewIncomeFragment,bundle);
         } else if (view.getId() == R.id.btnBudgetNavInc) {
-            Navigation.findNavController(view).navigate(R.id.action_incomeFragment_to_budgetFragement);
+            Navigation.findNavController(view).navigate(R.id.action_incomeFragment_to_budgetFragement,bundle);
         } else if (view.getId() == R.id.BtnIncNavIncView) {
-            Navigation.findNavController(view).navigate(R.id.action_incomeFragment_to_viewIncomeFragment);
+            Navigation.findNavController(view).navigate(R.id.action_incomeFragment_to_viewIncomeFragment,bundle);
         }
     }
 
 
     private void writeToDatabase(View view) {
+        // The URL to get data
+        String readUrl = "https://weather-f9ae8-default-rtdb.firebaseio.com/Budget/"+mUsername+"/.json";
+
+        JsonObjectRequest jsonRequest2 = new JsonObjectRequest(
+                Request.Method.GET, readUrl, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response2) {
+                        try {
+                            // Handle the response
+
+                            // Get the first key in the response
+                            Iterator<String> keys = response2.keys();
+                            if (keys.hasNext()) {
+                                firstKey = keys.next();
+                                // Call the method to perform the POST request with the obtained key
+                                performPostRequest(firstKey,view);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Log.e("WriteToDatabase", "Error handling GET response");
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // Handle errors that occurred during the request
+                        error.printStackTrace();
+                        Log.e("WriteToDatabase", "Error reading from database");
+                    }
+                });
+
+        // Add the request to the RequestQueue
+        requestQueue2.add(jsonRequest2);
+    }
+
+    private void performPostRequest(String key,View view) {
         //getting the input fields
         String Amount = ((EditText) view.findViewById(R.id.InputIncome)).getText().toString();
         String Date = ((EditText) view.findViewById(R.id.InputIncDate)).getText().toString();
@@ -131,8 +173,8 @@ public class IncomeFragment extends Fragment implements View.OnClickListener {
             e.printStackTrace();
         }
 
-        // The URL to which you want to send the POST request
-        String writeUrl = "https://weather-f9ae8-default-rtdb.firebaseio.com/Budget/0/Users/Income.json";
+        // The URL to post data
+        String writeUrl = "https://weather-f9ae8-default-rtdb.firebaseio.com/Budget/" + this.mUsername + "/" + key + "/Income.json";
 
         // Create a JsonObjectRequest with POST method
         JsonObjectRequest jsonRequest = new JsonObjectRequest(
@@ -158,4 +200,5 @@ public class IncomeFragment extends Fragment implements View.OnClickListener {
         // Add the request to the RequestQueue
         requestQueue.add(jsonRequest);
     }
+
 }

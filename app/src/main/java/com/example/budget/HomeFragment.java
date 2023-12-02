@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -20,12 +21,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    public static final String UsernamePassed = "Username";
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private String mUsername;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -35,16 +34,14 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     * @param Username Parameter 1.
      * @return A new instance of fragment HomeFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static HomeFragment newInstance(String param1, String param2) {
+    public static HomeFragment newInstance(String Username) {
         HomeFragment fragment = new HomeFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString(UsernamePassed, Username);
         fragment.setArguments(args);
         return fragment;
     }
@@ -53,8 +50,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            this.mUsername = getArguments().getString(UsernamePassed);
         }
     }
 
@@ -85,19 +81,21 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
     }
     @Override
     public void onClick(View view) {
-        //making a if statment that check what button pressed and goes to the fragment
+        Bundle bundle = new Bundle();
+        bundle.putString(UsernamePassed,mUsername);
+        //making a if statement that check what button pressed and goes to the fragment
         if(view.getId()==R.id.BtnBudget){
             //goes to the budget fragment
-            Navigation.findNavController(view).navigate(R.id.action_homeFragment_to_budgetFragement);
+            Navigation.findNavController(view).navigate(R.id.action_homeFragment_to_budgetFragement,bundle);
         } else if (view.getId()==R.id.BtnGoals) {
             //goes to the Goal fragment
-            Navigation.findNavController(view).navigate(R.id.action_homeFragment_to_goalsFragment);
+            Navigation.findNavController(view).navigate(R.id.action_homeFragment_to_goalsFragment,bundle);
         } else if (view.getId()==R.id.BtnIncome) {
             //goes to the income fragment
-            Navigation.findNavController(view).navigate(R.id.action_homeFragment_to_incomeFragment);
+            Navigation.findNavController(view).navigate(R.id.action_homeFragment_to_incomeFragment,bundle);
         } else if (view.getId()==R.id.BtnExpenses) {
             //goes to the expenses fragment
-            Navigation.findNavController(view).navigate(R.id.action_homeFragment_to_expenseFragment);
+            Navigation.findNavController(view).navigate(R.id.action_homeFragment_to_expenseFragment,bundle);
         }
     }
 }

@@ -39,11 +39,8 @@ import java.util.Iterator;
  */
 public class LoginFragment extends Fragment implements View.OnClickListener{
 
-    //private static final String LogUsername =RegisterFragment.RegUsername;
-
     private RequestQueue requestQueue;
 
-    public final static String UsernamePassed ="Username";
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -135,12 +132,12 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
                                     String Username = firstObject.getString("UserName");
                                     String Password = firstObject.getString("Password");
 
-                                    Toast.makeText(getContext(), "pass and username: "+Username+" "+ Password, Toast.LENGTH_SHORT).show();
+                                    //Toast.makeText(getContext(), "pass and username: "+Username+" "+ Password, Toast.LENGTH_SHORT).show();
                                     if(Username.equals(UserName) && Password.equals(PasswordInput)){
                                         Bundle bundle = new Bundle();
-                                        bundle.putString(UsernamePassed,Username);
+                                        bundle.putString(HomeFragment.UsernamePassed,Username);
                                         Toast.makeText(getContext(), "Login Successful", Toast.LENGTH_SHORT).show();
-                                        Navigation.findNavController(view).navigate(R.id.action_loginFragment_to_homeFragment);
+                                        Navigation.findNavController(view).navigate(R.id.action_loginFragment_to_homeFragment,bundle);
                                     }else{
                                         Toast.makeText(getContext(), "User doesn't exist or password wrong", Toast.LENGTH_SHORT).show();
                                     }

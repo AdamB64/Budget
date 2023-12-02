@@ -28,6 +28,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -41,10 +42,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 public class ViewIncomeFragment extends Fragment implements View.OnClickListener{
 
+    private static final String UsernamePassed = HomeFragment.UsernamePassed;
 
-
-    //url for the cloud database
-    private static final String FIREBASE_DATABASE_URL = "https://weather-f9ae8-default-rtdb.firebaseio.com/Budget/0/Users/Income.json";
+    private String firstKey;
 
     //Array for the expenses
     private ArrayList<String> incomeList;
@@ -55,14 +55,10 @@ public class ViewIncomeFragment extends Fragment implements View.OnClickListener
     //Volley request queue
     private RequestQueue requestQueue;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private RequestQueue requestQueue2;
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private String mUsername;
 
     public ViewIncomeFragment() {
         // Required empty public constructor
@@ -72,16 +68,14 @@ public class ViewIncomeFragment extends Fragment implements View.OnClickListener
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     * @param Username username of user
      * @return A new instance of fragment ViewExpensesFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static ViewExpensesFragment newInstance(String param1, String param2) {
+    public static ViewExpensesFragment newInstance(String Username) {
         ViewExpensesFragment fragment = new ViewExpensesFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putString(Username, Username);
         fragment.setArguments(args);
         return fragment;
     }
@@ -90,8 +84,7 @@ public class ViewIncomeFragment extends Fragment implements View.OnClickListener
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            this.mUsername = getArguments().getString(UsernamePassed);
         }
     }
 
@@ -119,15 +112,56 @@ public class ViewIncomeFragment extends Fragment implements View.OnClickListener
         //Initialise the RequestQueue
         requestQueue = Volley.newRequestQueue(requireContext());
 
+        requestQueue2=Volley.newRequestQueue(requireContext());
+
         //fetch and display expense data using Volloy
-        fetchAndDisplayExpensesData();
+        writeToDatabase(this.getView());
     }
 
 
-    private void fetchAndDisplayExpensesData(){
+    private void writeToDatabase(View view) {
+        // The URL to get data
+        String readUrl = "https://weather-f9ae8-default-rtdb.firebaseio.com/Budget/"+mUsername+"/.json";
+
+        JsonObjectRequest jsonRequest2 = new JsonObjectRequest(
+                Request.Method.GET, readUrl, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response2) {
+                        try {
+                            // Handle the response
+
+                            // Get the first key in the response
+                            Iterator<String> keys = response2.keys();
+                            if (keys.hasNext()) {
+                                firstKey = keys.next();
+                                // Call the method to perform the POST request with the obtained key
+                                fetchAndDisplayExpensesData(firstKey);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Log.e("WriteToDatabase", "Error handling GET response");
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // Handle errors that occurred during the request
+                        error.printStackTrace();
+                        Log.e("WriteToDatabase", "Error reading from database");
+                    }
+                });
+
+        // Add the request to the RequestQueue
+        requestQueue2.add(jsonRequest2);
+    }
+
+    private void fetchAndDisplayExpensesData(String key){
         incomeList.clear();
+        String Url = "https://weather-f9ae8-default-rtdb.firebaseio.com/Budget/"+mUsername+"/"+key+"/Income.json";
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                Request.Method.GET, FIREBASE_DATABASE_URL, null,
+                Request.Method.GET, Url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -146,11 +180,12 @@ public class ViewIncomeFragment extends Fragment implements View.OnClickListener
                                 String description = entry.get("Description").asText();
 
                                 Log.d("ViewIncomeFragment", "Response: " + amount+date+description);
-
-                                // Display Expenses to the list view
-                                incomeList.add("Amount: " + amount + ", Date: " + date + ", Description: " + description);
-                                // Notify the adapter that the data set has been changed
-                                adapter.notifyDataSetChanged();
+                                if (amount!=0) {
+                                    // Display Expenses to the list view
+                                    incomeList.add("Amount: " + amount + ", Date: " + date + ", Description: " + description);
+                                    // Notify the adapter that the data set has been changed
+                                    adapter.notifyDataSetChanged();
+                                }
                             }
                         }catch (JsonProcessingException e) {
                             throw new RuntimeException(e);
