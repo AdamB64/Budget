@@ -106,16 +106,12 @@ public class RegisterFragment extends Fragment implements View.OnClickListener{
         boolean r =false;
         // Retrieve data from input fields
         String userName = ((EditText) view.findViewById(R.id.InputName)).getText().toString();
-        String userEmail = ((EditText) view.findViewById(R.id.InputEmail)).getText().toString();
         String userPassword = ((EditText) view.findViewById(R.id.InputPassword)).getText().toString();
         // Assuming you have a JSONObject with the data you want to write
         JSONObject postData = new JSONObject();
         try {
-            if(userName.isEmpty()==true || userEmail.isEmpty() ==true|| userPassword.isEmpty()==true)
-            {
+            if(userName.isEmpty()==true || userPassword.isEmpty()==true) {
                 Toast.makeText(getContext(), "Must have input in all fields", Toast.LENGTH_SHORT).show();
-            } else if (userEmail.contains("@")==false) {
-                Toast.makeText(getContext(), "email must have a @", Toast.LENGTH_SHORT).show();
             }else {
                 r=true;
                 // Create an array for expenses
@@ -138,7 +134,6 @@ public class RegisterFragment extends Fragment implements View.OnClickListener{
 
                 // Put arrays into the JSON object
                 postData.put("UserName", userName);
-                postData.put("Email", userEmail);
                 postData.put("Password", userPassword);
                 postData.put("Expenses", expensesArray);
                 postData.put("Income", incomeArray);
@@ -152,7 +147,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener{
         }
 
         // The URL to which you want to send the POST request
-        String writeUrl = "https://weather-f9ae8-default-rtdb.firebaseio.com/Budget.json";
+        String writeUrl = "https://weather-f9ae8-default-rtdb.firebaseio.com/Budget/"+userName+".json";
 
         // Create a JsonObjectRequest with POST method
         JsonObjectRequest jsonRequest = new JsonObjectRequest(

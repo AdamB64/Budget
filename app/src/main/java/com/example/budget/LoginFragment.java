@@ -6,11 +6,14 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -19,12 +22,14 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.budget.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 
 /**
@@ -35,6 +40,9 @@ import java.util.ArrayList;
 public class LoginFragment extends Fragment implements View.OnClickListener{
 
     //private static final String LogUsername =RegisterFragment.RegUsername;
+
+    private RequestQueue requestQueue;
+
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -81,6 +89,9 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
     }
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState){
+        // Initialize the RequestQueue
+        requestQueue = Volley.newRequestQueue(requireContext());
+
         Button LoginNavHomeButton = view.findViewById(R.id.BtnLogin);
         LoginNavHomeButton.setOnClickListener(this);
         Toast.makeText(getContext(), "Username"+this.mUsername, Toast.LENGTH_SHORT).show();
@@ -89,16 +100,76 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
     @Override
     public void onClick(View view) {
         //going to the home fragment if button clicked
-        if(view.getId()==R.id.BtnLogin){
+        if(view.getId()== R.id.BtnLogin){
             boolean loginTrue=login(this.getView());
-            Navigation.findNavController(view).navigate(R.id.action_loginFragment_to_homeFragment);
+            if (loginTrue==true) {
+                Navigation.findNavController(view).navigate(R.id.action_loginFragment_to_homeFragment);
+                Toast.makeText(getContext(), "Login Successful", Toast.LENGTH_SHORT).show();
+            }else {
+                Toast.makeText(getContext(), "User doesn't exist or password wrong", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
     private boolean login(View view){
-        boolean loginTrue=false;
+        final boolean[] loginTrue = {false};
 
-        return loginTrue;
+        //get the user inputted username
+        EditText userNameEditText = view.findViewById(R.id.Input_name);
+        String UserName = userNameEditText.getText().toString();
+
+        EditText passwordEditText = view.findViewById(R.id.PasswordInput);
+        String PasswordInput = passwordEditText.getText().toString();
+
+        // The URL to which you want to send the POST request
+        String writeUrl = String.format("https://weather-f9ae8-default-rtdb.firebaseio.com/Budget/%s/.json",UserName);
+
+        // Create a JsonObjectRequest with POST method
+        JsonObjectRequest jsonRequest = new JsonObjectRequest(
+                Request.Method.GET, writeUrl, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            if (response.length() > 0) {
+                                // Handle the response
+
+                                // Get the first key in the response
+                                Iterator<String> keys = response.keys();
+                                if (keys.hasNext()) {
+                                    String firstKey = keys.next();
+                                    JSONObject firstObject = response.getJSONObject(firstKey);
+                                    String Username = firstObject.getString("UserName");
+                                    String Password = firstObject.getString("Password");
+
+                                    Toast.makeText(getContext(), "pass and username: "+Username+" "+ Password, Toast.LENGTH_SHORT).show();
+                                    if(Username.equals(UserName) && Password.equals(PasswordInput)){
+                                        loginTrue[0] = true;
+                                    }
+                                // Do something with the first object
+                                Log.d("WriteToDatabase", "First object found: " + firstObject.toString());
+                                }
+                            } else {
+                                Log.e("WriteToDatabase", "Empty JSON response");
+                            }
+
+                        }catch (JSONException e) {
+                            e.printStackTrace();
+                            Log.e("WriteToDatabase", "Error parsing JSON response");
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // Handle errors that occurred during the request
+                        error.printStackTrace();
+                        Log.e("WriteToDatabase", "Error writing to database");
+                    }
+                });
+
+        // Add the request to the RequestQueue
+        requestQueue.add(jsonRequest);
+        return loginTrue[0];
     }
-
 }

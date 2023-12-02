@@ -18,15 +18,15 @@
     <string name="tvLoginNav">Click here to login for out budget app</string>
 
     <!--String Resources for the register fragment-->
-    <string name="tvRegisterTitle">Type your email, name and you a unique password below</string>
-    <string name="tvEmail">Type Email here</string>
+    <string name="tvRegisterTitle">Type name and you a unique password below</string>
     <string name="tvName">Type Name here</string>
     <string name="tvRegister">Register</string>
 
     <!--String resources for the login fragment-->
-    <string name="tvTitleLogin">Type below your name/email and password to login</string>
-    <string name="tvName_Email">Type Email/Name here</string>
+    <string name="tvTitleLogin">Type below your name and password to login</string>
+    <string name="tvName_Email">Type Name here</string>
     <string name="tvLogin">Login</string>
+    <string name="tvPasswordInput"></string>
 
     <!--String resources for the budget Fragment-->
     <string name="tvTitleBudget">Here you can see your budget and also your percentage towards your goal</string>
