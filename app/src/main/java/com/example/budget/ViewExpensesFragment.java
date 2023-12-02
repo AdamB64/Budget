@@ -211,9 +211,11 @@ public class ViewExpensesFragment extends Fragment implements View.OnClickListen
 
     @Override
     public void onClick(View view) {
+        Bundle bundle = new Bundle();
+        bundle.putString(UsernamePassed,this.mUsername);
         //if statement to navigate to the budget page
         if(view.getId()==R.id.BtnEpxBudgetNav){
-            Navigation.findNavController(view).navigate(R.id.action_viewExpensesFragment_to_budgetFragement);
+            Navigation.findNavController(view).navigate(R.id.action_viewExpensesFragment_to_budgetFragement,bundle);
         }
     }
 }

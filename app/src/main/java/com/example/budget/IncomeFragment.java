@@ -115,11 +115,6 @@ public class IncomeFragment extends Fragment implements View.OnClickListener {
         bundle.putString(UsernamePassed,this.mUsername);
         if (view.getId() == R.id.BtnAddIncome) {
             writeToDatabase();
-            if(login==true) {
-                Navigation.findNavController(view).navigate(R.id.action_incomeFragment_to_viewIncomeFragment, bundle);
-            }else{
-                Toast.makeText(getContext(), R.string.tvErrorDate, Toast.LENGTH_SHORT).show();
-            }
         } else if (view.getId() == R.id.btnBudgetNavInc) {
             Navigation.findNavController(view).navigate(R.id.action_incomeFragment_to_budgetFragement,bundle);
         } else if (view.getId() == R.id.BtnIncNavIncView) {
@@ -214,8 +209,14 @@ public class IncomeFragment extends Fragment implements View.OnClickListener {
 
                 // Add the request to the RequestQueue
                 requestQueue.add(jsonRequest);
+                Bundle bundle=new Bundle();
+                bundle.putString(UsernamePassed,this.mUsername);
+                Navigation.findNavController(this.getView()).navigate(R.id.action_incomeFragment_to_viewIncomeFragment, bundle);
+            }else {
+                Toast.makeText(getContext(), R.string.tvErrorAmount, Toast.LENGTH_SHORT).show();
             }
-            Toast.makeText(getContext(), R.string.tvErrorAmount, Toast.LENGTH_SHORT).show();
+        }else{
+            Toast.makeText(getContext(), R.string.tvErrorDate, Toast.LENGTH_SHORT).show();
         }
 
     }

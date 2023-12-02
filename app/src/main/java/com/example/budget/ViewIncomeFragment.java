@@ -207,9 +207,11 @@ public class ViewIncomeFragment extends Fragment implements View.OnClickListener
 
     @Override
     public void onClick(View view) {
+        Bundle bundle = new Bundle();
+        bundle.putString(UsernamePassed,this.mUsername);
         //if statement to navigate to the budget page
         if(view.getId()==R.id.BtnIncBudgetNav){
-            Navigation.findNavController(view).navigate(R.id.action_viewIncomeFragment_to_budgetFragement);
+            Navigation.findNavController(view).navigate(R.id.action_viewIncomeFragment_to_budgetFragement,bundle);
         }
     }
 }

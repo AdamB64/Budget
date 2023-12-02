@@ -111,20 +111,15 @@ public class ExpenseFragment extends Fragment implements View.OnClickListener{
         Bundle bundle = new Bundle();
         bundle.putString(UsernamePassed,this.mUsername);
         if(view.getId()==R.id.BtnAddExpense){
-            writeToDatabase(this.getView());
-            if(login==true) {
-                Navigation.findNavController(view).navigate(R.id.action_expenseFragment_to_viewExpensesFragment, bundle);
-            }else{
-                Toast.makeText(getContext(), R.string.tvErrorDate, Toast.LENGTH_SHORT).show();
-            }
-            } else if (view.getId()==R.id.BtnBudgetNavExp) {
+            writeToDatabase();
+        } else if (view.getId()==R.id.BtnBudgetNavExp) {
             Navigation.findNavController(view).navigate(R.id.action_expenseFragment_to_budgetFragement,bundle);
         } else if (view.getId()==R.id.BtnExpNavExpView) {
             Navigation.findNavController(view).navigate(R.id.action_expenseFragment_to_viewExpensesFragment,bundle);
         }
     }
 
-    private void writeToDatabase(View view) {
+    private void writeToDatabase() {
         // The URL to get data
         String readUrl = "https://weather-f9ae8-default-rtdb.firebaseio.com/Budget/"+mUsername+"/.json";
 
@@ -210,8 +205,12 @@ public class ExpenseFragment extends Fragment implements View.OnClickListener{
 
                 // Add the request to the RequestQueue
                 requestQueue.add(jsonRequest);
+                Bundle bundle=new Bundle();
+                bundle.putString(UsernamePassed,this.mUsername);
+                Navigation.findNavController(this.getView()).navigate(R.id.action_expenseFragment_to_viewExpensesFragment, bundle);
+            }else {
+                Toast.makeText(getContext(), R.string.tvErrorAmount, Toast.LENGTH_SHORT).show();
             }
-            Toast.makeText(getContext(), R.string.tvErrorAmount, Toast.LENGTH_SHORT).show();
         }
     }
 

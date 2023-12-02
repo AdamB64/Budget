@@ -128,6 +128,9 @@
         <action
             android:id="@+id/action_viewExpensesFragment_to_budgetFragement"
             app:destination="@id/budgetFragement" />
+        <argument
+            android:name="Username"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/viewIncomeFragment"
@@ -137,5 +140,8 @@
         <action
             android:id="@+id/action_viewIncomeFragment_to_budgetFragement"
             app:destination="@id/budgetFragement" />
+        <argument
+            android:name="Username"
+            app:argType="string" />
     </fragment>
 </navigation>
