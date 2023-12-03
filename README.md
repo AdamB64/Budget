@@ -1,7 +1,7 @@
 Adam Buchan 2107616
 Budget app<br>
 a app that allow the user to manage their budget<br>
-this a budget app developed in android studio that has the function of registering and logging using the users inputted data in a user and then letting them add income and expenses with the amount date and description if needed also using the users data and also set thier goal also using the users inputted data for their budget it also tell them thier budget and how close they are to thier budget
+this a budget app developed in android studio that has the function of registering and logging using the users inputted data in a user and then letting them add income and expenses with the amount date and description if needed also using the users data and also set thier goal also using the users inputted data for their budget it also tell them thier budget and how close they are to thier budget and also all the fragments from the login fragment to the rest after it get passed the username from the user login so that all fragments can narror down the url using the username passed 
 
 <h1>Details of app design:</h1>
 <h1>Start page</h1>
