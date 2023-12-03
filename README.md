@@ -90,3 +90,6 @@ this is the income and expenses pages and it allow the user to input the amount 
   <li>Button 1:click to go to budget page</li>
 </ul>
 these are the income and expenses pages that take all the added income or expenses from the database and put them into a list view so the user can see and allow naviagion to the budget page
+<h1>Navigation</h1>
+<img src="image_2023-12-03_141720496.png">
+this is the naviagtion screenshot of all my fragments
