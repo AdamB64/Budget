@@ -27,7 +27,7 @@ this is the regsiter page that allow the user to make an acount using a user nam
 <img src="Screenshot 2023-12-03 133319.png">
 <ul>
   <li>Textview 1: tells user what to do on the page</li>
-  <li>>Input 1: lets user type username</li>
+  <li>Input 1: lets user type username</li>
   <li>textview 2:tells user to type password down below</li>
   <li>input 2: lets user type password</li>
   <li>Button 1:button to clic to login</li>
@@ -72,15 +72,21 @@ this is the goals page that allow the user to update thier goal by using a input
 <img src="Screenshot 2023-12-03 133356.png">
 <img src="Screenshot 2023-12-03 133411.png">
 <ul>
-  <ul>Income
-    <li></li>
-  </ul>
-  <ul>Expenses
-      <li></li>
-  </ul>
+  <li>Text view 1: tells users what the shouls do on page</li>
+  <li>input 1: lets user add an amount</li>
+  <li>Input 2: lets user input a date</li>
+  <li>Input 3: lets user input a description if needed</li>
+  <li>Button 1: click to add income/expenses</li>
+  <li>Button 2:clcik to see income/expenses</li>
+  <li>Button 3: click to go to budget page</li>
 </ul>
 this is the income and expenses pages and it allow the user to input the amount of income/expenses the date gotten and a description,using some input widgets, if wanted and then post the new income/exepenses to the firebase databse when the add income button is clicked but if the income or expenses added isnt numbers the user functions doenst run and the user gets an error the same with the date if it isnt in the proper format and the page also get the value at the time of budget and then adds the new income or takes away the expenses from it and then post that to the databse along with the income/expenses and the page also allow the user to naviagte to the income/expenses view page and back to the budget page.
 <h1>income/epenses view page</h1>
 <img src="Screenshot 2023-12-03 133403.png">
 <img src="Screenshot 2023-12-03 133416.png">
+<ul>
+  <li>Text view1: tells the user that all income/expenes are displayed below</li>
+  <li>List view 1: show all the income/exepense with the amount, date and description if added</li>
+  <li>Button 1:click to go to budget page</li>
+</ul>
 these are the income and expenses pages that take all the added income or expenses from the database and put them into a list view so the user can see and allow naviagion to the budget page
