@@ -1,0 +1,1 @@
+this a budget app developed in android studio that has the function of registering and logging in a user and then letting them add income and expenses with the amount date and description if needed and also set thier goal for their budget it also tell them thier budget and how close they are to thier budget
