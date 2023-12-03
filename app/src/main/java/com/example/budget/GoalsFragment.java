@@ -156,7 +156,7 @@ public class GoalsFragment extends Fragment implements View.OnClickListener{
 
     public void GoalReplace(final String newGoal,final Context context,String key) {
         // Your Firebase Realtime Database URL
-        String url = "https://weather-f9ae8-default-rtdb.firebaseio.com/Budget/"+this.mUsername+"/"+key+"/Goal.json";
+        String url = "https://weather-f9ae8-default-rtdb.firebaseio.com/Budget/"+this.mUsername+"/"+key+"/.json";
 
         // Make a network request using Volley
         RequestQueue requestQueue = Volley.newRequestQueue(context);

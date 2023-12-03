@@ -1,5 +1,6 @@
 package com.example.budget;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -44,6 +45,8 @@ public class IncomeFragment extends Fragment implements View.OnClickListener {
 
     private  RequestQueue requestQueue2;
 
+    private RequestQueue requestQueue3;
+
     // the fragment initialization parameters
     private static final String UsernamePassed = HomeFragment.UsernamePassed;
 
@@ -51,6 +54,7 @@ public class IncomeFragment extends Fragment implements View.OnClickListener {
 
     public boolean login;
 
+    public int income;
     //parameters
     private String mUsername;
 
@@ -96,6 +100,8 @@ public class IncomeFragment extends Fragment implements View.OnClickListener {
 
         requestQueue2=Volley.newRequestQueue(requireContext());
 
+        requestQueue3=Volley.newRequestQueue(requireContext());
+
         //getting the button that navigate to the income view fragment
         Button IncomeAddButton = view.findViewById(R.id.BtnAddIncome);
         IncomeAddButton.setOnClickListener(this);
@@ -139,8 +145,13 @@ public class IncomeFragment extends Fragment implements View.OnClickListener {
                             Iterator<String> keys = response2.keys();
                             if (keys.hasNext()) {
                                 firstKey = keys.next();
+                                JSONObject placeholder = response2.getJSONObject(firstKey);
+                                int Budget = placeholder.getInt("TotalBudget");
                                 // Call the method to perform the POST request with the obtained key
                                 performPostRequest(firstKey,IncomeFragment.this.getView());
+                                int TotalBudget = Budget+income;
+                                postBudget(firstKey,requireContext(),TotalBudget);
+
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -172,6 +183,7 @@ public class IncomeFragment extends Fragment implements View.OnClickListener {
         if(isValidDate(date)) {
             if (Amount.matches("[0-9]+")) {
                 login = true;
+                income=Integer.parseInt(Amount);
                 // Assuming you have a JSONObject with the data you want to write
                 JSONObject postData = new JSONObject();
                 try {
@@ -234,6 +246,42 @@ public class IncomeFragment extends Fragment implements View.OnClickListener {
         } catch (ParseException e) {
             // Parsing failed, not a valid date
             return false;
+        }
+    }
+
+    private void postBudget(String key, Context context,int budget){
+        String writeUrl = "https://weather-f9ae8-default-rtdb.firebaseio.com/Budget/" + this.mUsername + "/" + key + "/.json";
+
+        RequestQueue requestQueue3 = Volley.newRequestQueue(context);
+        try {
+            JSONObject updateData = new JSONObject();
+            updateData.put("TotalBudget",budget);
+
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                    Request.Method.PATCH, writeUrl, updateData,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            Toast.makeText(context, "Budget updated as well", Toast.LENGTH_SHORT).show();
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            String errorMessage;
+                            if (error.networkResponse != null && error.networkResponse.data != null) {
+                                errorMessage = new String(error.networkResponse.data);
+                            } else {
+                                errorMessage = "Unknown error";
+                            }
+
+                            Toast.makeText(context, "Error updating budget: " + errorMessage, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+            requestQueue3.add(jsonObjectRequest);
+        }catch (Exception e){
+            e.printStackTrace();
+            Toast.makeText(context, "Exception: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 

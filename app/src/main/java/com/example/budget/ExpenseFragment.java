@@ -1,5 +1,6 @@
 package com.example.budget;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -32,6 +33,7 @@ import java.util.ArrayList;
 import java.nio.BufferUnderflowException;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -44,11 +46,14 @@ public class ExpenseFragment extends Fragment implements View.OnClickListener{
 
     private String firstKey;
 
-    public boolean login;
+    public int expenses;
+
 
     private RequestQueue requestQueue;
 
     private RequestQueue requestQueue2;
+
+    private RequestQueue requestQueue3;
 
     private String mUsername;
 
@@ -94,6 +99,8 @@ public class ExpenseFragment extends Fragment implements View.OnClickListener{
 
         requestQueue2 = Volley.newRequestQueue(requireContext());
 
+        requestQueue3 = Volley.newRequestQueue(requireContext());
+
         //get the button to navigate to the expenses view page
         Button ExpensesAddButton = view.findViewById(R.id.BtnAddExpense);
         ExpensesAddButton.setOnClickListener(this);
@@ -121,7 +128,7 @@ public class ExpenseFragment extends Fragment implements View.OnClickListener{
 
     private void writeToDatabase() {
         // The URL to get data
-        String readUrl = "https://weather-f9ae8-default-rtdb.firebaseio.com/Budget/"+mUsername+"/.json";
+        String readUrl = "https://weather-f9ae8-default-rtdb.firebaseio.com/Budget/"+this.mUsername+"/.json";
 
         JsonObjectRequest jsonRequest2 = new JsonObjectRequest(
                 Request.Method.GET, readUrl, null,
@@ -134,9 +141,15 @@ public class ExpenseFragment extends Fragment implements View.OnClickListener{
                             // Get the first key in the response
                             Iterator<String> keys = response2.keys();
                             if (keys.hasNext()) {
+
                                 firstKey = keys.next();
+                                JSONObject placeHolder = response2.getJSONObject(firstKey);
+                                int Budget = placeHolder.getInt("TotalBudget");
                                 // Call the method to perform the POST request with the obtained key
                                 performPostRequest(firstKey,ExpenseFragment.this.getView());
+                                int TotalBudget = Budget -expenses;
+                                postBudget(firstKey,requireContext(),TotalBudget);
+
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -167,13 +180,13 @@ public class ExpenseFragment extends Fragment implements View.OnClickListener{
         }
         if(isValidDate(date)) {
             if(Amount.matches("[0-9]+")) {
-                login = true;
                 // Assuming you have a JSONObject with the data you want to write
                 JSONObject postData = new JSONObject();
                 try {
                     postData.put("Amount", Amount);
                     postData.put("Date", date);
                     postData.put("Description", Description);
+                    expenses=Integer.parseInt(Amount);
                     // Add other data fields as needed
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -228,5 +241,42 @@ public class ExpenseFragment extends Fragment implements View.OnClickListener{
             // Parsing failed, not a valid date
             return false;
         }
+    }
+
+    private void postBudget(String key, Context context,int budget){
+        String writeUrl = "https://weather-f9ae8-default-rtdb.firebaseio.com/Budget/" + this.mUsername + "/" + key + "/.json";
+
+        RequestQueue requestQueue3 = Volley.newRequestQueue(context);
+        try {
+            JSONObject updateData = new JSONObject();
+            updateData.put("TotalBudget", budget);
+
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                    Request.Method.PATCH, writeUrl, updateData,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            Toast.makeText(context, "Budget updated as well", Toast.LENGTH_SHORT).show();
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            String errorMessage;
+                            if (error.networkResponse != null && error.networkResponse.data != null) {
+                                errorMessage = new String(error.networkResponse.data);
+                            } else {
+                                errorMessage = "Unknown error";
+                            }
+
+                            Toast.makeText(context, "Error updating budget: " + errorMessage, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+            requestQueue3.add(jsonObjectRequest);
+        }catch (Exception e){
+            e.printStackTrace();
+            Toast.makeText(context, "Exception: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+
     }
 }

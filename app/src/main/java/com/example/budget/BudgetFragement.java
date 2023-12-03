@@ -168,7 +168,7 @@ public class BudgetFragement extends Fragment implements View.OnClickListener {
         requestQueue2.add(jsonRequest2);
     }
     public void makeRequest(String key) {
-        String url = "https://weather-f9ae8-default-rtdb.firebaseio.com/Budget/"+this.mUsername+"/"+key+".json";
+        String url = "https://weather-f9ae8-default-rtdb.firebaseio.com/Budget/"+this.mUsername+"/"+key+"/.json";
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
@@ -179,12 +179,11 @@ public class BudgetFragement extends Fragment implements View.OnClickListener {
                             // Parse the JSON data
 
                             double budget = response.getDouble("TotalBudget");
-                            JSONObject GoalObject = response.getJSONObject("Goal");
-                            double goal = GoalObject.getDouble("Goal");
+                            double goal = response.getDouble("Goal");
 
                             // Update the TextView with the result
-                            budgetInputTextView.setText(String.format("Budget: %.2f", budget));
-                            GoalInputTextView.setText("Goal: "+ goal+" and the percentage you are to reaching it "+((budget/goal)*100)+"%");
+                            BudgetFragement.this.budgetInputTextView.setText(String.format("Budget: %.2f", budget));
+                            BudgetFragement.this.GoalInputTextView.setText("Goal: "+ goal+" and the percentage you are to reaching it "+((budget/goal)*100)+"%");
                         } catch (JSONException e) {
                             e.printStackTrace();
                             Log.e("BudgetFragment", "JSONException: " + e.getMessage());
