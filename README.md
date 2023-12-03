@@ -6,6 +6,10 @@ this a budget app developed in android studio that has the function of registeri
 <h1>Details of app design:</h1>
 <h1>Start page</h1>
 <img src="Screenshot 2023-12-03 130722.png">
+<ul>
+  <li>Button 1:takes you to the Register page</li>
+  <li>Button 2:takes you to the login page</li>
+</ul>
 this is the main start up page of my app and all it does is tell the user what kind of app this is and allow the user to navigate to the register page or the login page using the buttons.
 <h1>Register page</h1>
 <img src="Screenshot 2023-12-03 133303.png">
