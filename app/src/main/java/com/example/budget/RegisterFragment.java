@@ -32,14 +32,13 @@ import org.json.JSONObject;
  */
 public class RegisterFragment extends Fragment implements View.OnClickListener{
 
+    //set up the requestqueue
     private RequestQueue requestQueue;
 
-    // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
@@ -93,54 +92,60 @@ public class RegisterFragment extends Fragment implements View.OnClickListener{
     }
     @Override
     public void onClick(@NonNull View view){
-        //if the register button is clicked go to home page
+        //if the register button is clicked go to home page and if method returns true
         if(view.getId()==R.id.BntRegister){
             boolean r =writeToDatabase(this.getView());
             if(r==true) {
+                //user authentication
                 Toast.makeText(getContext(), R.string.tvRegisterComplete, Toast.LENGTH_SHORT).show();
+                //nav to login fragment
                 Navigation.findNavController(view).navigate(R.id.action_registerFragment_to_loginFragment);
             }
         }
     }
 
     private boolean writeToDatabase(@NonNull View view) {
+        //set the boolean as false
         boolean r =false;
         // Retrieve data from input fields
         String userName = ((EditText) view.findViewById(R.id.InputName)).getText().toString();
         String userPassword = ((EditText) view.findViewById(R.id.InputPassword)).getText().toString();
-        // Assuming you have a JSONObject with the data you want to write
+        // set a new json object
         JSONObject postData = new JSONObject();
         try {
+            //check if username or password are blank
             if(userName.isEmpty()==true || userPassword.isEmpty()==true) {
+                //tell user user or password must not be blank
                 Toast.makeText(getContext(), R.string.tvInputError, Toast.LENGTH_SHORT).show();
-            } else if (userName.contains(" ")|| userPassword.contains(" ")) {
+            }//check if username or password has spaces
+            else if (userName.contains(" ")|| userPassword.contains(" ")) {
+                //tells user no spaces
                 Toast.makeText(getContext(), R.string.tvUsernameError, Toast.LENGTH_SHORT).show();
             } else {
+                //set boolean as true
                 r=true;
-                // Create an array for expenses
+                // Create an object for expenses
                 JSONObject expensesArray = new JSONObject();
                 JSONObject expenseObject = new JSONObject();
-                // You may want to get these values from the user input fields
                 expenseObject.put("Amount", 0);
                 expenseObject.put("Date", "");
                 expenseObject.put("Description", "");
                 expensesArray.put("Expenses",expenseObject);
 
-                // Create an array for income
+                // Create an object for income
                 JSONObject incomeArray = new JSONObject();
                 JSONObject incomeObject = new JSONObject();
-                // You may want to get these values from the user input fields
-                incomeObject.put("Amount", 0);  // Replace with the actual amount value
-                incomeObject.put("Date", "");  // Replace with the actual date value
-                incomeObject.put("Description", "");  // Replace with the actual description value
+                incomeObject.put("Amount", 0);
+                incomeObject.put("Date", "");
+                incomeObject.put("Description", "");
                 incomeArray.put("Income",incomeObject);
 
-                // Put arrays into the JSON object
+                // Put object into the JSON object
                 postData.put("UserName", userName);
                 postData.put("Password", userPassword);
                 postData.put("Expenses", expensesArray);
                 postData.put("Income", incomeArray);
-                postData.put("Goal","");
+                postData.put("Goal",0);
                 postData.put("TotalBudget",0);
 
 
@@ -158,9 +163,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener{
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        // Handle the response from the server after writing data
-                        // You may want to update your UI or perform other actions
-                        // based on the server's response
+                        //success call
                         Log.d("WriteToDatabase", "Write successful");
                     }
                 },
@@ -175,6 +178,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener{
 
         // Add the request to the RequestQueue
         requestQueue.add(jsonRequest);
+        //return boolean
         return r;
     }
 

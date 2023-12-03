@@ -78,6 +78,7 @@ public class StartUpFragement extends Fragment implements View.OnClickListener{
     }
     @Override
     public void onClick(View view){
+        //setting up the navcrontroller
         NavController navController = Navigation.findNavController(view);
         //using the if statement to navigate to the connected fragments
         if(view.getId()==R.id.BtnRegisterNav){

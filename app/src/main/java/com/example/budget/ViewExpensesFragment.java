@@ -45,7 +45,7 @@ public class ViewExpensesFragment extends Fragment implements View.OnClickListen
 
 
 
-    //url for the cloud database
+    //username name passed
     private static final String UsernamePassed = HomeFragment.UsernamePassed;
 
     //Array for the expenses
@@ -57,10 +57,12 @@ public class ViewExpensesFragment extends Fragment implements View.OnClickListen
     //Volley request queue
     private RequestQueue requestQueue;
 
-    private String firstKey;
-
     private RequestQueue requestQueue2;
 
+    //first key set as public
+    private String firstKey;
+
+    //username value passed
     private String mUsername;
 
     public ViewExpensesFragment() {
@@ -117,7 +119,7 @@ public class ViewExpensesFragment extends Fragment implements View.OnClickListen
 
         requestQueue2 = Volley.newRequestQueue(requireContext());
 
-        //fetch and display expense data using Volloy
+        //fetch and display expense data using Volley
         writeToDatabase(this.getView());
     }
 
@@ -179,11 +181,13 @@ public class ViewExpensesFragment extends Fragment implements View.OnClickListen
                             JsonNode jsonNode = objectMapper.readTree(userObject);
 
                             for (JsonNode entry : jsonNode) {
+                                //getting the amount date ect for each object in Expenses
                                 int amount = entry.get("Amount").asInt();
                                 String date = entry.get("Date").asText();
                                 String description = entry.get("Description").asText();
 
                                 Log.d("ViewIncomeFragment", "Response: " + amount+date+description);
+                                //if amount doesn't equal 0 do
                                 if(amount!=0) {
                                     // Display Expenses to the list view
                                     expensesList.add("Amount: " + amount + ", Date: " + date + ", Description: " + description);
@@ -211,10 +215,13 @@ public class ViewExpensesFragment extends Fragment implements View.OnClickListen
 
     @Override
     public void onClick(View view) {
+        //setting up the bundle to pass in the nav
         Bundle bundle = new Bundle();
+        //adding the username to the bundle
         bundle.putString(UsernamePassed,this.mUsername);
         //if statement to navigate to the budget page
         if(view.getId()==R.id.BtnEpxBudgetNav){
+            //going to the budget fragment
             Navigation.findNavController(view).navigate(R.id.action_viewExpensesFragment_to_budgetFragement,bundle);
         }
     }

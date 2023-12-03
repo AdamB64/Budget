@@ -41,6 +41,7 @@ import java.util.Iterator;
  */
 public class IncomeFragment extends Fragment implements View.OnClickListener {
 
+    //set up the requestqueue
     private RequestQueue requestQueue;
 
     private  RequestQueue requestQueue2;
@@ -117,13 +118,19 @@ public class IncomeFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
+        //set the bundle to be passed on navigation
         Bundle bundle=new Bundle();
+        //add the username in the bundle
         bundle.putString(UsernamePassed,this.mUsername);
+        //if button pressed do
         if (view.getId() == R.id.BtnAddIncome) {
+            //this method
             writeToDatabase();
         } else if (view.getId() == R.id.btnBudgetNavInc) {
+            //go to budget fragment
             Navigation.findNavController(view).navigate(R.id.action_incomeFragment_to_budgetFragement,bundle);
         } else if (view.getId() == R.id.BtnIncNavIncView) {
+            //go to view income fragment
             Navigation.findNavController(view).navigate(R.id.action_incomeFragment_to_viewIncomeFragment,bundle);
         }
     }
@@ -144,12 +151,17 @@ public class IncomeFragment extends Fragment implements View.OnClickListener {
                             // Get the first key in the response
                             Iterator<String> keys = response2.keys();
                             if (keys.hasNext()) {
+                                //get the firstkey from response
                                 firstKey = keys.next();
+                                //set placeholder for first key of response
                                 JSONObject placeholder = response2.getJSONObject(firstKey);
+                                //get the budget from user
                                 int Budget = placeholder.getInt("TotalBudget");
                                 // Call the method to perform the POST request with the obtained key
                                 performPostRequest(firstKey,IncomeFragment.this.getView());
+                                //add the income to the budget
                                 int TotalBudget = Budget+income;
+                                //call method and pass first and totalbudget
                                 postBudget(firstKey,requireContext(),TotalBudget);
 
                             }
@@ -184,9 +196,10 @@ public class IncomeFragment extends Fragment implements View.OnClickListener {
             if (Amount.matches("[0-9]+")) {
                 login = true;
                 income=Integer.parseInt(Amount);
-                // Assuming you have a JSONObject with the data you want to write
+                //set up jsonobject
                 JSONObject postData = new JSONObject();
                 try {
+                    //add the user input to the json object
                     postData.put("Amount", Amount);
                     postData.put("Date", date);
                     postData.put("Description", Description);
@@ -221,6 +234,7 @@ public class IncomeFragment extends Fragment implements View.OnClickListener {
 
                 // Add the request to the RequestQueue
                 requestQueue.add(jsonRequest);
+                //set up bundle with username and pass it in the nav
                 Bundle bundle=new Bundle();
                 bundle.putString(UsernamePassed,this.mUsername);
                 Navigation.findNavController(this.getView()).navigate(R.id.action_incomeFragment_to_viewIncomeFragment, bundle);
@@ -233,6 +247,8 @@ public class IncomeFragment extends Fragment implements View.OnClickListener {
 
     }
 
+
+    //method to see if date is in right format
     private static boolean isValidDate(String dateStr) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         sdf.setLenient(false);  // This ensures strict validation
@@ -250,11 +266,14 @@ public class IncomeFragment extends Fragment implements View.OnClickListener {
     }
 
     private void postBudget(String key, Context context,int budget){
+        //url to PATCH to
         String writeUrl = "https://weather-f9ae8-default-rtdb.firebaseio.com/Budget/" + this.mUsername + "/" + key + "/.json";
 
         RequestQueue requestQueue3 = Volley.newRequestQueue(context);
         try {
+            //set up new jsonobject
             JSONObject updateData = new JSONObject();
+            //add the new budget to it to be PATCHed to the url
             updateData.put("TotalBudget",budget);
 
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
@@ -262,6 +281,7 @@ public class IncomeFragment extends Fragment implements View.OnClickListener {
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
+                            //success call
                             Toast.makeText(context, "Budget updated as well", Toast.LENGTH_SHORT).show();
                         }
                     },

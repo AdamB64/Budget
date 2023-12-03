@@ -19,11 +19,11 @@ import android.widget.Toast;
  */
 public class HomeFragment extends Fragment implements View.OnClickListener{
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    //set up the username variable for it to be used in other fragments
     public static final String UsernamePassed = "Username";
 
-    // TODO: Rename and change types of parameters
+
+    //set up the user name passed value
     private String mUsername;
 
     public HomeFragment() {
@@ -81,7 +81,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener{
     }
     @Override
     public void onClick(View view) {
+        //setting the bundle to be passed in the navigation
         Bundle bundle = new Bundle();
+        //adding the username to the bundle
         bundle.putString(UsernamePassed,mUsername);
         //making a if statement that check what button pressed and goes to the fragment
         if(view.getId()==R.id.BtnBudget){

@@ -33,18 +33,25 @@ import java.util.Iterator;
  */
 public class BudgetFragement extends Fragment implements View.OnClickListener {
 
+
+    //declare all the request
     private RequestQueue requestQueue;
 
     private RequestQueue requestQueue2;
 
+    //set the first key as public
     private String firstKey;
 
+    //declare the inputs
     private TextView budgetInputTextView;
 
     private TextView GoalInputTextView;
 
+    //get the passes username varaible
     private final static String UsernamePassed=HomeFragment.UsernamePassed;
 
+
+    //the passed username
     private String mUsername;
 
     public BudgetFragement() {
@@ -58,7 +65,6 @@ public class BudgetFragement extends Fragment implements View.OnClickListener {
      * @param Username the users username
      * @return A new instance of fragment BudgetFragement.
      */
-    // TODO: Rename and change types and number of parameters
     public static BudgetFragement newInstance(String Username) {
         BudgetFragement fragment = new BudgetFragement();
         Bundle args = new Bundle();
@@ -84,10 +90,13 @@ public class BudgetFragement extends Fragment implements View.OnClickListener {
 
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        //start all the volley requests
         requestQueue = Volley.newRequestQueue(requireContext());
 
         requestQueue2= Volley.newRequestQueue(requireContext());
 
+
+        //declare the inputs
         budgetInputTextView = view.findViewById(R.id.BudgetInput);
 
         GoalInputTextView=view.findViewById(R.id.GoalInput);
@@ -112,7 +121,9 @@ public class BudgetFragement extends Fragment implements View.OnClickListener {
     }
     @Override
     public void onClick(View view) {
+        //create the bundle to pass in navigation
         Bundle bundle = new Bundle();
+        //set the bundle as the username
         bundle.putString(UsernamePassed,this.mUsername);
         //a if statement for going to the different fragment and making sure it the right fragment
         if(view.getId()==R.id.BtnIncomeNav2){
@@ -134,14 +145,13 @@ public class BudgetFragement extends Fragment implements View.OnClickListener {
         // The URL to get data
         String readUrl = "https://weather-f9ae8-default-rtdb.firebaseio.com/Budget/"+mUsername+"/.json";
 
+        //the request to get the jsonobject first key
         JsonObjectRequest jsonRequest2 = new JsonObjectRequest(
                 Request.Method.GET, readUrl, null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response2) {
                         try {
-                            // Handle the response
-
                             // Get the first key in the response
                             Iterator<String> keys = response2.keys();
                             if (keys.hasNext()) {
@@ -168,6 +178,7 @@ public class BudgetFragement extends Fragment implements View.OnClickListener {
         requestQueue2.add(jsonRequest2);
     }
     public void makeRequest(String key) {
+        //url to make the GET
         String url = "https://weather-f9ae8-default-rtdb.firebaseio.com/Budget/"+this.mUsername+"/"+key+"/.json";
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url, null,

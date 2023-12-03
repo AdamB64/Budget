@@ -42,8 +42,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 public class ViewIncomeFragment extends Fragment implements View.OnClickListener{
 
+    //set the username name using passed name
     private static final String UsernamePassed = HomeFragment.UsernamePassed;
 
+    //set firstkey as public
     private String firstKey;
 
     //Array for the expenses
@@ -57,7 +59,7 @@ public class ViewIncomeFragment extends Fragment implements View.OnClickListener
 
     private RequestQueue requestQueue2;
 
-    // TODO: Rename and change types of parameters
+    //set the username value
     private String mUsername;
 
     public ViewIncomeFragment() {
@@ -114,7 +116,7 @@ public class ViewIncomeFragment extends Fragment implements View.OnClickListener
 
         requestQueue2=Volley.newRequestQueue(requireContext());
 
-        //fetch and display expense data using Volloy
+        //fetch and display expense data using Volley
         writeToDatabase(this.getView());
     }
 
@@ -175,11 +177,13 @@ public class ViewIncomeFragment extends Fragment implements View.OnClickListener
                             JsonNode jsonNode = objectMapper.readTree(userObject);
 
                             for (JsonNode entry : jsonNode) {
+                                //get the amount date ect for each object in Income
                                 int amount = entry.get("Amount").asInt();
                                 String date = entry.get("Date").asText();
                                 String description = entry.get("Description").asText();
 
                                 Log.d("ViewIncomeFragment", "Response: " + amount+date+description);
+                                //if amount doesnt equal 0 do
                                 if (amount!=0) {
                                     // Display Expenses to the list view
                                     incomeList.add("Amount: " + amount + ", Date: " + date + ", Description: " + description);
@@ -207,10 +211,13 @@ public class ViewIncomeFragment extends Fragment implements View.OnClickListener
 
     @Override
     public void onClick(View view) {
+        //set up the bundle
         Bundle bundle = new Bundle();
+        //add the username to the bundler
         bundle.putString(UsernamePassed,this.mUsername);
         //if statement to navigate to the budget page
         if(view.getId()==R.id.BtnIncBudgetNav){
+            //go to the budget fragment
             Navigation.findNavController(view).navigate(R.id.action_viewIncomeFragment_to_budgetFragement,bundle);
         }
     }

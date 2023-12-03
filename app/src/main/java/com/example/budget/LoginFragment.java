@@ -39,15 +39,14 @@ import java.util.Iterator;
  */
 public class LoginFragment extends Fragment implements View.OnClickListener{
 
+    //set up the rquestqueue
     private RequestQueue requestQueue;
 
 
-    // TODO: Rename parameter arguments, choose names that match
+
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
     //private String mUsername;
 
     public LoginFragment() {
@@ -89,16 +88,17 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
         // Initialize the RequestQueue
         requestQueue = Volley.newRequestQueue(requireContext());
 
+        //get the login button
         Button LoginNavHomeButton = view.findViewById(R.id.BtnLogin);
         LoginNavHomeButton.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View view) {
-        //going to the home fragment if button clicked
+        //going to the home fragment if button clicked using a method
         if(view.getId()== R.id.BtnLogin){
             login(this.getView());
-                Toast.makeText(getContext(), R.string.tvUserLogin, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.tvUserLogin, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -108,10 +108,11 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
         EditText userNameEditText = view.findViewById(R.id.Input_name);
         String UserName = userNameEditText.getText().toString();
 
+        //get the inputted password
         EditText passwordEditText = view.findViewById(R.id.PasswordInput);
         String PasswordInput = passwordEditText.getText().toString();
 
-        // The URL to which you want to send the POST request
+        // The URL to send the POST request
         String writeUrl = String.format("https://weather-f9ae8-default-rtdb.firebaseio.com/Budget/%s/.json",UserName);
 
         // Create a JsonObjectRequest with POST method
@@ -121,27 +122,33 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
+                            //if response has value in it do
                             if (response.length() > 0) {
-                                // Handle the response
 
                                 // Get the first key in the response
                                 Iterator<String> keys = response.keys();
                                 if (keys.hasNext()) {
+                                    //get the first key from the response
                                     String firstKey = keys.next();
+                                    //get the jsonobject of the first key
                                     JSONObject firstObject = response.getJSONObject(firstKey);
+                                    //get the username
                                     String Username = firstObject.getString("UserName");
+                                    //get the password
                                     String Password = firstObject.getString("Password");
 
-                                    //Toast.makeText(getContext(), "pass and username: "+Username+" "+ Password, Toast.LENGTH_SHORT).show();
+                                    //if username and password from input match json username and password do
                                     if(Username.equals(UserName) && Password.equals(PasswordInput)){
+                                        //create bundle that will be passed in nav
                                         Bundle bundle = new Bundle();
+                                        //add the username to the buncle
                                         bundle.putString(HomeFragment.UsernamePassed,Username);
-                                        Toast.makeText(getContext(), "Login Successful", Toast.LENGTH_SHORT).show();
+                                        //navigate to the home fragments
                                         Navigation.findNavController(view).navigate(R.id.action_loginFragment_to_homeFragment,bundle);
                                     }else{
-                                        Toast.makeText(getContext(), "User doesn't exist or password wrong", Toast.LENGTH_SHORT).show();
+                                        //else tell user no such users
+                                        Toast.makeText(getContext(), R.string.tvNoUser, Toast.LENGTH_SHORT).show();
                                     }
-                                // Do something with the first object
                                 Log.d("WriteToDatabase", "First object found: " + firstObject.toString());
                                 }
                             } else {

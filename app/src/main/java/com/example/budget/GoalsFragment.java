@@ -33,16 +33,20 @@ import java.util.Iterator;
  */
 public class GoalsFragment extends Fragment implements View.OnClickListener{
 
+    //set a textview as public for the goal replaced
     private TextView goalReplaced;
 
+    //set the requestqueues
     private RequestQueue requestQueue;
 
+    private RequestQueue requestQueue2;
+    //set the first key as public
     private String firstKey;
 
-    private RequestQueue requestQueue2;
-
+    //set the username variable name
     private static final String UsernamePassed = HomeFragment.UsernamePassed;
 
+    //set the username variable value
     private String mUsername;
 
     public GoalsFragment() {
@@ -82,6 +86,7 @@ public class GoalsFragment extends Fragment implements View.OnClickListener{
 
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        //set up the new requestqueues
         requestQueue = Volley.newRequestQueue(requireContext());
 
         requestQueue2 = Volley.newRequestQueue(requireContext());
@@ -96,22 +101,31 @@ public class GoalsFragment extends Fragment implements View.OnClickListener{
         Button ExpensesButton = view.findViewById(R.id.BtnGoalNavExp);
         ExpensesButton.setOnClickListener(this);
 
+        //getting button to add the goal
         Button AddGoalsButton = view.findViewById(R.id.BtnAddGoals);
         AddGoalsButton.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View view) {
+        //seting up the bundle to be passed to other fragments
         Bundle bundle = new Bundle();
+        //giving the bundle the username
         bundle.putString(UsernamePassed,this.mUsername);
+        //if button pressed do
         if(view.getId()==R.id.BtnBudgetNavInc){
+            //go to budget fragment
             Navigation.findNavController(view).navigate(R.id.action_goalsFragment_to_budgetFragement,bundle);
         } else if (view.getId()==R.id.BtnGoalNavExp) {
+            //go to expenses fragment
             Navigation.findNavController(view).navigate(R.id.action_goalsFragment_to_expenseFragment,bundle);
         } else if (view.getId()==R.id.BtnGoalNavInc) {
+            //go to income fragment
             Navigation.findNavController(view).navigate(R.id.action_goalsFragment_to_incomeFragment,bundle);
         } else if (view.getId() == R.id.BtnAddGoals) {
+            //set goalreplaced as inputted value
             goalReplaced = this.getView().findViewById(R.id.NewGoalInput);
+            //call write to database and pass the view
             writeToDatabase(this.getView());
         }
     }
@@ -126,7 +140,6 @@ public class GoalsFragment extends Fragment implements View.OnClickListener{
                     @Override
                     public void onResponse(JSONObject response2) {
                         try {
-                            // Handle the response
 
                             // Get the first key in the response
                             Iterator<String> keys = response2.keys();
