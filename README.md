@@ -25,7 +25,7 @@ this is the goals page that allow the user to update thier goal by using a input
 <h1>income/exepenses page</h1>
 <img src="Screenshot 2023-12-03 133356.png">
 <img src="Screenshot 2023-12-03 133411.png">
-this is the income and expenses pages and it allow the user to input the amount of income/expenses the date gotten and a description,using some input widgets, if wanted and then post the new income/exepenses to the firebase databse when the add income button is clicked and the page also get the value at the time of budget and then adds the new income or takes away the expenses from it and then post that to the databse along with the income/expenses and the page also allow the user to naviagte to the income/expenses view page and back to the budget page
+this is the income and expenses pages and it allow the user to input the amount of income/expenses the date gotten and a description,using some input widgets, if wanted and then post the new income/exepenses to the firebase databse when the add income button is clicked but if the income or expenses added isnt numbers the user functions doenst run and the user gets an error the same with the date if it isnt in the proper format and the page also get the value at the time of budget and then adds the new income or takes away the expenses from it and then post that to the databse along with the income/expenses and the page also allow the user to naviagte to the income/expenses view page and back to the budget page.
 <h1>income/epenses view page</h1>
 <img src="Screenshot 2023-12-03 133403.png">
 <img src="Screenshot 2023-12-03 133416.png">
