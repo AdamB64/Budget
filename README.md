@@ -1,7 +1,7 @@
 Adam Buchan 2107616
 Budget app
 a app that allow the user to manage their budget
-this a budget app developed in android studio that has the function of registering and logging in a user and then letting them add income and expenses with the amount date and description if needed and also set thier goal for their budget it also tell them thier budget and how close they are to thier budget
+this a budget app developed in android studio that has the function of registering and logging using the users inputted data in a user and then letting them add income and expenses with the amount date and description if needed also using the users data and also set thier goal also using the users inputted data for their budget it also tell them thier budget and how close they are to thier budget
 
 <h1>Details of app design:</h1>
 <h1>Start page</h1>
@@ -80,7 +80,7 @@ this is the goals page that allow the user to update thier goal by using a input
   <li>Button 2:clcik to see income/expenses</li>
   <li>Button 3: click to go to budget page</li>
 </ul>
-this is the income and expenses pages and it allow the user to input the amount of income/expenses the date gotten and a description,using some input widgets, if wanted and then post the new income/exepenses to the firebase databse when the add income button is clicked but if the income or expenses added isnt numbers the user functions doenst run and the user gets an error the same with the date if it isnt in the proper format and the page also get the value at the time of budget and then adds the new income or takes away the expenses from it and then post that to the databse along with the income/expenses and the page also allow the user to naviagte to the income/expenses view page and back to the budget page.
+this is the income and expenses pages and it allow the user to input the amount of income/expenses the date gotten and a description then post the new income/exepenses to the firebase databse when the button is clicked and the page also get the value at the time of budget and then adds the new income or takes away the expenses from it and then post that to the databse along with the income/expenses and the page also allow the user to naviagte to the income/expenses view page and back to the budget page.
 <h1>income/epenses view page</h1>
 <img src="Screenshot 2023-12-03 133403.png">
 <img src="Screenshot 2023-12-03 133416.png">
@@ -90,3 +90,10 @@ this is the income and expenses pages and it allow the user to input the amount 
   <li>Button 1:click to go to budget page</li>
 </ul>
 these are the income and expenses pages that take all the added income or expenses from the database and put them into a list view so the user can see and allow naviagion to the budget page
+<h1>Navigation</h1>
+<img src="image_2023-12-03_141720496.png">
+this is the naviagtion screenshot of all my fragments
+<h1>Reflective statement</h1>
+In the making of my budget app I got a more indepth view into some of the knowledge like  VOLLEY as i was able to know about the use of POST and PATCH using volley to write to the database and also to upadate the databse and i feel like a got a better grasp on the passing of data between fragments using arguments and bundles after making this app and during the course of the project i did use generative AI to help with this project which i will have the links for the chats in a file called <b>generativeAI</b> and the way i used this was to ask about version of thing i didnt know about like the POST and PATCH for VOLLEY and also error code that i got or things that heppened when i was running the debugger like jumping methods or lines of code ect but i also had problems with this as the code generated sometimes woulnt add a varaible so the code wouldnt work as inteded and also some times i was only give the code for one fragment so it didnt know if the bundle was really being passed to this fragment so it just assumed that something was wrong with the IDE or my internet permissions ect. 
+something succeful with the project would be able to fully read and write to the firebase database using volley since i hade more then one GET, POST and PATCH so im glad that they all work since some times i had to use a get to post something like get a key from a jsonobject.
+what could of gone better is more user error as right now two user can be called the same thing with the same password
