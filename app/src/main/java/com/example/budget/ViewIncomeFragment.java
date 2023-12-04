@@ -29,7 +29,10 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
+import com.example.budget.data.Users;
+import com.example.budget.data.UsersRepo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -41,6 +44,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * create an instance of this fragment.
  */
 public class ViewIncomeFragment extends Fragment implements View.OnClickListener{
+
+    //list to get user from room database
+    private List<Users> IncomeList;
+
+    private UsersRepo mUsersRepo;
 
     //set the username name using passed name
     private static final String UsernamePassed = HomeFragment.UsernamePassed;
@@ -77,7 +85,7 @@ public class ViewIncomeFragment extends Fragment implements View.OnClickListener
     public static ViewExpensesFragment newInstance(String Username) {
         ViewExpensesFragment fragment = new ViewExpensesFragment();
         Bundle args = new Bundle();
-        args.putString(Username, Username);
+        args.putString(UsernamePassed, Username);
         fragment.setArguments(args);
         return fragment;
     }
@@ -88,6 +96,8 @@ public class ViewIncomeFragment extends Fragment implements View.OnClickListener
         if (getArguments() != null) {
             this.mUsername = getArguments().getString(UsernamePassed);
         }
+        this.mUsersRepo = new UsersRepo(getContext());
+        this.IncomeList=new ArrayList<>();
     }
 
     @Override
@@ -116,8 +126,23 @@ public class ViewIncomeFragment extends Fragment implements View.OnClickListener
 
         requestQueue2=Volley.newRequestQueue(requireContext());
 
-        //fetch and display expense data using Volley
-        writeToDatabase(this.getView());
+        IncomeList.addAll(this.mUsersRepo.GetIncome(this.mUsername));
+        if(IncomeList.size()>0) {
+            for (int i = 0; i < IncomeList.size(); i++) {
+                Users users = IncomeList.get(i);
+
+                int IncAmount = users.getIncamount();
+                String Date = users.getDate();
+                String Description = users.getDescription();
+                incomeList.add("Amount: " + IncAmount + " date: " + Date + " Description: " + Description);
+
+            }
+            adapter.notifyDataSetChanged();
+        }else {
+
+            //fetch and display expense data using Volley
+            writeToDatabase(this.getView());
+        }
     }
 
 
@@ -161,52 +186,53 @@ public class ViewIncomeFragment extends Fragment implements View.OnClickListener
 
     private void fetchAndDisplayExpensesData(String key){
         incomeList.clear();
-        String Url = "https://weather-f9ae8-default-rtdb.firebaseio.com/Budget/"+mUsername+"/"+key+"/Income.json";
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                Request.Method.GET, Url, null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.d("ViewIncomeFragment", "Response: " + response.toString());
-                        try {
-                            String userObject = response.toString();
+            String Url = "https://weather-f9ae8-default-rtdb.firebaseio.com/Budget/" + mUsername + "/" + key + "/Income.json";
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                    Request.Method.GET, Url, null,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            Log.d("ViewIncomeFragment", "Response: " + response.toString());
+                            try {
+                                String userObject = response.toString();
 
-                            // Create an ObjectMapper
-                            ObjectMapper objectMapper = new ObjectMapper();
+                                // Create an ObjectMapper
+                                ObjectMapper objectMapper = new ObjectMapper();
 
-                            JsonNode jsonNode = objectMapper.readTree(userObject);
+                                JsonNode jsonNode = objectMapper.readTree(userObject);
 
-                            for (JsonNode entry : jsonNode) {
-                                //get the amount date ect for each object in Income
-                                int amount = entry.get("Amount").asInt();
-                                String date = entry.get("Date").asText();
-                                String description = entry.get("Description").asText();
+                                for (JsonNode entry : jsonNode) {
+                                    //get the amount date ect for each object in Income
+                                    int amount = entry.get("Amount").asInt();
+                                    String date = entry.get("Date").asText();
+                                    String description = entry.get("Description").asText();
 
-                                Log.d("ViewIncomeFragment", "Response: " + amount+date+description);
-                                //if amount doesnt equal 0 do
-                                if (amount!=0) {
-                                    // Display Expenses to the list view
-                                    incomeList.add("Amount: " + amount + ", Date: " + date + ", Description: " + description);
-                                    // Notify the adapter that the data set has been changed
-                                    adapter.notifyDataSetChanged();
+                                    Log.d("ViewIncomeFragment", "Response: " + amount + date + description);
+                                    //if amount doesnt equal 0 do
+                                    if (amount != 0) {
+                                        // Display Expenses to the list view
+                                        incomeList.add("Amount: " + amount + ", Date: " + date + ", Description: " + description);
+                                        // Notify the adapter that the data set has been changed
+                                        adapter.notifyDataSetChanged();
+                                    }
                                 }
+                            } catch (JsonProcessingException e) {
+                                throw new RuntimeException(e);
                             }
-                        }catch (JsonProcessingException e) {
-                            throw new RuntimeException(e);
                         }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        //handles errors
-                        error.printStackTrace();
-                    }
-                });
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            //handles errors
+                            error.printStackTrace();
+                        }
+                    });
 
-        //add the request to the request queue
-        requestQueue.add(jsonObjectRequest);
-    }
+            //add the request to the request queue
+            requestQueue.add(jsonObjectRequest);
+        }
+
 
 
     @Override

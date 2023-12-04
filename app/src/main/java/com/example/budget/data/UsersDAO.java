@@ -22,4 +22,10 @@ public interface UsersDAO {
 
     @Query("SELECT * FROM Users Where UserName like :username and Password like :password")
     public List<Users> FindUser(String username,String password);
+
+    @Query("SELECT * FROM Users WHERE UserName LIKE :username ORDER BY Goal DESC LIMIT 1")
+    public List<Users> findGoal(String username);
+
+    @Query("SELECT * FROM Users WHERE UserName LIKE :username AND Incamount>0 or ExpAmount>0")
+    public List<Users> findBudget(String username);
 }

@@ -30,7 +30,10 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
+import com.example.budget.data.Users;
+import com.example.budget.data.UsersRepo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -43,6 +46,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 public class ViewExpensesFragment extends Fragment implements View.OnClickListener{
 
+    private List<Users> ExpensesList;
+
+    private UsersRepo mUsersRepo;
 
 
     //username name passed
@@ -91,6 +97,8 @@ public class ViewExpensesFragment extends Fragment implements View.OnClickListen
         if (getArguments() != null) {
             this.mUsername = getArguments().getString(UsernamePassed);
         }
+        this.mUsersRepo = new UsersRepo(getContext());
+        this.ExpensesList = new ArrayList<>();
     }
 
     @Override
@@ -119,8 +127,24 @@ public class ViewExpensesFragment extends Fragment implements View.OnClickListen
 
         requestQueue2 = Volley.newRequestQueue(requireContext());
 
-        //fetch and display expense data using Volley
-        writeToDatabase(this.getView());
+        ExpensesList.addAll(this.mUsersRepo.GetExpenses(this.mUsername));
+        if(ExpensesList.size()>0){
+            for(int i = 0;i<ExpensesList.size();i++){
+                Users users = ExpensesList.get(i);
+
+                int ExpAmount = users.getExpAmount();
+                String Date = users.getDate();
+                String Description = users.getDescription();
+
+                expensesList.add("Amount: "+ExpAmount+" Date: "+Date+" Description: "+Description);
+
+            }
+            adapter.notifyDataSetChanged();
+        }else {
+
+            //fetch and display expense data using Volley
+            writeToDatabase(this.getView());
+        }
     }
 
     private void writeToDatabase(View view) {

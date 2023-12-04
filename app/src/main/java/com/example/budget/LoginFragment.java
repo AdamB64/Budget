@@ -47,6 +47,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
 
     private UsersRepo mUsersRepo;
 
+    //list to get users from room database
     private List<Users> usersList;
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -81,6 +82,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
             //this.mUsername = getArguments().getString(LogUsername);
         }
         this.mUsersRepo = new UsersRepo(getContext());
+        this.usersList = new ArrayList<>();
     }
 
     @Override
@@ -118,7 +120,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
         //get the inputted password
         EditText passwordEditText = view.findViewById(R.id.PasswordInput);
         String PasswordInput = passwordEditText.getText().toString();
-
+        usersList.addAll(this.mUsersRepo.findusers(UserName, PasswordInput));
+        if (usersList.size() ==0) {
             // The URL to send the POST request
             String writeUrl = String.format("https://weather-f9ae8-default-rtdb.firebaseio.com/Budget/%s/.json", UserName);
 
@@ -179,5 +182,12 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
 
             // Add the request to the RequestQueue
             requestQueue.add(jsonRequest);
+        } else {
+            Bundle bundle = new Bundle();
+            //add the username to the buncle
+            bundle.putString(HomeFragment.UsernamePassed, UserName);
+            //navigate to the home fragments
+            Navigation.findNavController(view).navigate(R.id.action_loginFragment_to_homeFragment, bundle);
+        }
     }
 }

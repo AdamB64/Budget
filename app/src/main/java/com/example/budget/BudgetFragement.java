@@ -19,12 +19,17 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.budget.data.Users;
+import com.example.budget.data.UsersDAO;
+import com.example.budget.data.UsersRepo;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -33,6 +38,12 @@ import java.util.Iterator;
  */
 public class BudgetFragement extends Fragment implements View.OnClickListener {
 
+
+    private List<Users> Goals;
+
+    private List<Users> Budget;
+
+    private UsersRepo mUsersRepo;
 
     //declare all the request
     private RequestQueue requestQueue;
@@ -49,7 +60,6 @@ public class BudgetFragement extends Fragment implements View.OnClickListener {
 
     //get the passes username varaible
     private final static String UsernamePassed=HomeFragment.UsernamePassed;
-
 
     //the passed username
     private String mUsername;
@@ -79,6 +89,9 @@ public class BudgetFragement extends Fragment implements View.OnClickListener {
         if (getArguments() != null) {
             this.mUsername = getArguments().getString(UsernamePassed);
         }
+        this.mUsersRepo = new UsersRepo(getContext());
+        this.Goals = new ArrayList<>();
+        this.Budget = new ArrayList<>();
     }
 
     @Override
@@ -115,9 +128,37 @@ public class BudgetFragement extends Fragment implements View.OnClickListener {
 
         Button GoalNavButton = view.findViewById(R.id.BtnGoalNavBudget);
         GoalNavButton.setOnClickListener(this);
+        int budget=0;
+        Budget.addAll(this.mUsersRepo.findBudget(this.mUsername));
+        if(Budget.size()>0){
+            for(int i =0;i<Budget.size();i++){
 
-        // Make a request to the Firebase link
-        getUserKey(this.getView());
+                Users users = Budget.get(i);
+                int PlaceHolderExp = users.getExpAmount();
+
+                int PlaceHolderInc = users.getIncamount();
+
+                budget+=PlaceHolderInc;
+                budget-=PlaceHolderExp;
+
+            }
+            BudgetFragement.this.budgetInputTextView.setText("Budget: "+ budget);
+        }
+
+
+
+        Goals.addAll(this.mUsersRepo.findGoal(this.mUsername));
+        if(Goals.size()>0){
+                Users users = Goals.get(0);
+
+                int goal =users.getGoal();
+                double  percent = ((double) budget/goal)*100;
+            BudgetFragement.this.GoalInputTextView.setText("Goal: "+ goal+" and the percentage you are to reaching it "+percent+"%");
+        }else {
+
+            // Make a request to the Firebase link
+            getUserKey(this.getView());
+        }
     }
     @Override
     public void onClick(View view) {

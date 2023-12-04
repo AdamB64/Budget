@@ -29,4 +29,12 @@ public class UsersRepo {
     public List<Users> findusers(String username,String password){
         return this.mUsersDAO.FindUser(username,password);
     }
+
+    public List<Users> findGoal(String username){
+        return this.mUsersDAO.findGoal(username);
+    }
+
+    public List<Users> findBudget(String username){
+        return this.mUsersDAO.findBudget(username);
+    }
 }

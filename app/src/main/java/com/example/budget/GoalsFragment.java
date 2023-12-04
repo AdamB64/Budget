@@ -189,7 +189,7 @@ public class GoalsFragment extends Fragment implements View.OnClickListener{
         users.setDate("");
         users.setPassword("");
 
-        mUsersRepo.addUser(users);
+        this.mUsersRepo.addUser(users);
 
         // Create the JSONObject for the update
         try {
