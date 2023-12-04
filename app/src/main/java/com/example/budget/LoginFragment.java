@@ -23,6 +23,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.budget.R;
+import com.example.budget.data.Users;
+import com.example.budget.data.UsersRepo;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,6 +32,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 
 /**
@@ -42,7 +45,9 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
     //set up the rquestqueue
     private RequestQueue requestQueue;
 
+    private UsersRepo mUsersRepo;
 
+    private List<Users> usersList;
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -75,6 +80,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
         if (getArguments() != null) {
             //this.mUsername = getArguments().getString(LogUsername);
         }
+        this.mUsersRepo = new UsersRepo(getContext());
     }
 
     @Override
@@ -97,12 +103,13 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
     public void onClick(View view) {
         //going to the home fragment if button clicked using a method
         if(view.getId()== R.id.BtnLogin){
+
             login(this.getView());
             Toast.makeText(getContext(), R.string.tvUserLogin, Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void login(View view){
+    private void login(View view) {
 
         //get the user inputted username
         EditText userNameEditText = view.findViewById(R.id.Input_name);
@@ -112,65 +119,76 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
         EditText passwordEditText = view.findViewById(R.id.PasswordInput);
         String PasswordInput = passwordEditText.getText().toString();
 
-        // The URL to send the POST request
-        String writeUrl = String.format("https://weather-f9ae8-default-rtdb.firebaseio.com/Budget/%s/.json",UserName);
+        usersList.addAll(this.mUsersRepo.findusers(UserName, PasswordInput));
+        if (usersList.size() == 0) {
 
-        // Create a JsonObjectRequest with POST method
-        JsonObjectRequest jsonRequest = new JsonObjectRequest(
-                Request.Method.GET, writeUrl, null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            //if response has value in it do
-                            if (response.length() > 0) {
+            // The URL to send the POST request
+            String writeUrl = String.format("https://weather-f9ae8-default-rtdb.firebaseio.com/Budget/%s/.json", UserName);
 
-                                // Get the first key in the response
-                                Iterator<String> keys = response.keys();
-                                if (keys.hasNext()) {
-                                    //get the first key from the response
-                                    String firstKey = keys.next();
-                                    //get the jsonobject of the first key
-                                    JSONObject firstObject = response.getJSONObject(firstKey);
-                                    //get the username
-                                    String Username = firstObject.getString("UserName");
-                                    //get the password
-                                    String Password = firstObject.getString("Password");
+            // Create a JsonObjectRequest with POST method
+            JsonObjectRequest jsonRequest = new JsonObjectRequest(
+                    Request.Method.GET, writeUrl, null,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            try {
+                                //if response has value in it do
+                                if (response.length() > 0) {
 
-                                    //if username and password from input match json username and password do
-                                    if(Username.equals(UserName) && Password.equals(PasswordInput)){
-                                        //create bundle that will be passed in nav
-                                        Bundle bundle = new Bundle();
-                                        //add the username to the buncle
-                                        bundle.putString(HomeFragment.UsernamePassed,Username);
-                                        //navigate to the home fragments
-                                        Navigation.findNavController(view).navigate(R.id.action_loginFragment_to_homeFragment,bundle);
-                                    }else{
-                                        //else tell user no such users
-                                        Toast.makeText(getContext(), R.string.tvNoUser, Toast.LENGTH_SHORT).show();
+                                    // Get the first key in the response
+                                    Iterator<String> keys = response.keys();
+                                    if (keys.hasNext()) {
+                                        //get the first key from the response
+                                        String firstKey = keys.next();
+                                        //get the jsonobject of the first key
+                                        JSONObject firstObject = response.getJSONObject(firstKey);
+                                        //get the username
+                                        String Username = firstObject.getString("UserName");
+                                        //get the password
+                                        String Password = firstObject.getString("Password");
+
+                                        //if username and password from input match json username and password do
+                                        if (Username.equals(UserName) && Password.equals(PasswordInput)) {
+                                            //create bundle that will be passed in nav
+                                            Bundle bundle = new Bundle();
+                                            //add the username to the buncle
+                                            bundle.putString(HomeFragment.UsernamePassed, Username);
+                                            //navigate to the home fragments
+                                            Navigation.findNavController(view).navigate(R.id.action_loginFragment_to_homeFragment, bundle);
+                                        } else {
+                                            //else tell user no such users
+                                            Toast.makeText(getContext(), R.string.tvNoUser, Toast.LENGTH_SHORT).show();
+                                        }
+                                        Log.d("WriteToDatabase", "First object found: " + firstObject.toString());
                                     }
-                                Log.d("WriteToDatabase", "First object found: " + firstObject.toString());
+                                } else {
+                                    Log.e("WriteToDatabase", "Empty JSON response");
                                 }
-                            } else {
-                                Log.e("WriteToDatabase", "Empty JSON response");
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                                Log.e("WriteToDatabase", "Error parsing JSON response");
                             }
-
-                        }catch (JSONException e) {
-                            e.printStackTrace();
-                            Log.e("WriteToDatabase", "Error parsing JSON response");
                         }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // Handle errors that occurred during the request
-                        error.printStackTrace();
-                        Log.e("WriteToDatabase", "Error writing to database");
-                    }
-                });
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            // Handle errors that occurred during the request
+                            error.printStackTrace();
+                            Log.e("WriteToDatabase", "Error writing to database");
+                        }
+                    });
 
-        // Add the request to the RequestQueue
-        requestQueue.add(jsonRequest);
+            // Add the request to the RequestQueue
+            requestQueue.add(jsonRequest);
+        }else{
+            //create bundle that will be passed in nav
+            Bundle bundle = new Bundle();
+            //add the username to the buncle
+            bundle.putString(HomeFragment.UsernamePassed,UserName);
+            //navigate to the home fragments
+            Navigation.findNavController(view).navigate(R.id.action_loginFragment_to_homeFragment, bundle);
+        }
     }
 }

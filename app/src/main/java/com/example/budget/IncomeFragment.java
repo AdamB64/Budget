@@ -21,6 +21,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.budget.data.Users;
+import com.example.budget.data.UsersRepo;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -59,6 +61,8 @@ public class IncomeFragment extends Fragment implements View.OnClickListener {
     //parameters
     private String mUsername;
 
+    private UsersRepo mUserRepo;
+
 
 
     public IncomeFragment() {
@@ -85,6 +89,7 @@ public class IncomeFragment extends Fragment implements View.OnClickListener {
         if (getArguments() != null) {
             this.mUsername = getArguments().getString(UsernamePassed);
         }
+        this.mUserRepo = new UsersRepo(getContext());
     }
 
     @Override
@@ -199,6 +204,17 @@ public class IncomeFragment extends Fragment implements View.OnClickListener {
                 //set up jsonobject
                 JSONObject postData = new JSONObject();
                 try {
+                    Users users = new Users();
+                    users.setPassword("");
+                    users.setUserName(this.mUsername);
+                    users.setGoal(0);
+                    users.setDescription(Description);
+                    users.setDate(date);
+                    users.setIncamount(Integer.parseInt(Amount));
+                    users.setExpAmount(0);
+                    users.setTotalBudget(0);
+
+                    mUserRepo.addUser(users);
                     //add the user input to the json object
                     postData.put("Amount", Amount);
                     postData.put("Date", date);

@@ -21,6 +21,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.budget.data.Users;
+import com.example.budget.data.UsersRepo;
 
 import org.json.JSONObject;
 
@@ -32,6 +34,8 @@ import java.util.Iterator;
  * create an instance of this fragment.
  */
 public class GoalsFragment extends Fragment implements View.OnClickListener{
+
+    private UsersRepo mUsersRepo;
 
     //set a textview as public for the goal replaced
     private TextView goalReplaced;
@@ -75,6 +79,7 @@ public class GoalsFragment extends Fragment implements View.OnClickListener{
         if (getArguments() != null) {
             this.mUsername = getArguments().getString(UsernamePassed);
         }
+        this.mUsersRepo = new UsersRepo(getContext());
     }
 
     @Override
@@ -173,6 +178,18 @@ public class GoalsFragment extends Fragment implements View.OnClickListener{
 
         // Make a network request using Volley
         RequestQueue requestQueue = Volley.newRequestQueue(context);
+
+        Users users = new Users();
+        users.setGoal(Integer.parseInt(newGoal));
+        users.setUserName(this.mUsername);
+        users.setTotalBudget(0);
+        users.setDescription("");
+        users.setIncamount(0);
+        users.setExpAmount(0);
+        users.setDate("");
+        users.setPassword("");
+
+        mUsersRepo.addUser(users);
 
         // Create the JSONObject for the update
         try {

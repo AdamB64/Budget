@@ -20,6 +20,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.budget.data.Users;
+import com.example.budget.data.UsersDAO;
+import com.example.budget.data.UsersRepo;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,6 +37,8 @@ public class RegisterFragment extends Fragment implements View.OnClickListener{
 
     //set up the requestqueue
     private RequestQueue requestQueue;
+
+    private UsersRepo mUserRepo;
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -71,6 +76,7 @@ public class RegisterFragment extends Fragment implements View.OnClickListener{
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        this.mUserRepo = new UsersRepo(getContext());
     }
 
     @Override
@@ -122,6 +128,18 @@ public class RegisterFragment extends Fragment implements View.OnClickListener{
                 //tells user no spaces
                 Toast.makeText(getContext(), R.string.tvUsernameError, Toast.LENGTH_SHORT).show();
             } else {
+                Users users = new Users();
+                users.setExpAmount(0);
+                users.setIncamount(0);
+                users.setDate("");
+                users.setDescription("");
+                users.setGoal(0);
+                users.setTotalBudget(0);
+                users.setUserName(userName);
+                users.setPassword(userPassword);
+
+                mUserRepo.addUser(users);
+
                 //set boolean as true
                 r=true;
                 // Create an object for expenses
