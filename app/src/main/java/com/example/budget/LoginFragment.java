@@ -119,9 +119,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
         EditText passwordEditText = view.findViewById(R.id.PasswordInput);
         String PasswordInput = passwordEditText.getText().toString();
 
-        usersList.addAll(this.mUsersRepo.findusers(UserName, PasswordInput));
-        if (usersList.size() == 0) {
-
             // The URL to send the POST request
             String writeUrl = String.format("https://weather-f9ae8-default-rtdb.firebaseio.com/Budget/%s/.json", UserName);
 
@@ -182,13 +179,5 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
 
             // Add the request to the RequestQueue
             requestQueue.add(jsonRequest);
-        }else{
-            //create bundle that will be passed in nav
-            Bundle bundle = new Bundle();
-            //add the username to the buncle
-            bundle.putString(HomeFragment.UsernamePassed,UserName);
-            //navigate to the home fragments
-            Navigation.findNavController(view).navigate(R.id.action_loginFragment_to_homeFragment, bundle);
-        }
     }
 }
