@@ -120,7 +120,10 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
         //get the inputted password
         EditText passwordEditText = view.findViewById(R.id.PasswordInput);
         String PasswordInput = passwordEditText.getText().toString();
+
+        //get the user deatils from the room database
         usersList.addAll(this.mUsersRepo.findusers(UserName, PasswordInput));
+        //check if the array with users details is 0 if so use the firebase database
         if (usersList.size() ==0) {
             // The URL to send the POST request
             String writeUrl = String.format("https://weather-f9ae8-default-rtdb.firebaseio.com/Budget/%s/.json", UserName);
@@ -183,6 +186,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
             // Add the request to the RequestQueue
             requestQueue.add(jsonRequest);
         } else {
+            //if not use then that means that the users exist in the database so login and nav to new screen
             Bundle bundle = new Bundle();
             //add the username to the buncle
             bundle.putString(HomeFragment.UsernamePassed, UserName);

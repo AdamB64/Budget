@@ -220,6 +220,7 @@ public class ExpenseFragment extends Fragment implements View.OnClickListener{
                     users.setExpAmount(Integer.parseInt(Amount));
                     users.setTotalBudget(0);
 
+                    //adding the users to the database
                     mUsersRepo.addUser(users);
                     //put the inputted variable in to the jsonobject
                     postData.put("Amount", Amount);

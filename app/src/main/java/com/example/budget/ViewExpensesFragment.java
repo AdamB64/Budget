@@ -127,18 +127,25 @@ public class ViewExpensesFragment extends Fragment implements View.OnClickListen
 
         requestQueue2 = Volley.newRequestQueue(requireContext());
 
+        //get the users expenses value
         ExpensesList.addAll(this.mUsersRepo.GetExpenses(this.mUsername));
+        //if above 0 do
         if(ExpensesList.size()>0){
+            //loop through the array
             for(int i = 0;i<ExpensesList.size();i++){
+                //make users equal each instance of array
                 Users users = ExpensesList.get(i);
 
+                //get the values needed
                 int ExpAmount = users.getExpAmount();
                 String Date = users.getDate();
                 String Description = users.getDescription();
 
+                //display the values
                 expensesList.add("Amount: "+ExpAmount+" Date: "+Date+" Description: "+Description);
 
             }
+            //notify the adapter the data has changed
             adapter.notifyDataSetChanged();
         }else {
 

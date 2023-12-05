@@ -5,6 +5,9 @@ import android.util.Log;
 
 import java.util.List;
 
+/**
+ * create the methods to use the query's and inserts from the DAO
+ */
 public class UsersRepo {
 
     private UsersDAO mUsersDAO;

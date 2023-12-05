@@ -204,6 +204,7 @@ public class IncomeFragment extends Fragment implements View.OnClickListener {
                 //set up jsonobject
                 JSONObject postData = new JSONObject();
                 try {
+                    //add the values needed to the room database
                     Users users = new Users();
                     users.setPassword("");
                     users.setUserName(this.mUsername);
@@ -214,6 +215,7 @@ public class IncomeFragment extends Fragment implements View.OnClickListener {
                     users.setExpAmount(0);
                     users.setTotalBudget(0);
 
+                    //adding the users field to the room database
                     mUserRepo.addUser(users);
                     //add the user input to the json object
                     postData.put("Amount", Amount);

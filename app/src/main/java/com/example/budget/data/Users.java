@@ -6,6 +6,9 @@ import androidx.room.PrimaryKey;
 
 import java.security.PrivateKey;
 
+/**
+ * declare the values of the database and the getters and setters for the values
+ */
 @Entity(tableName="Users")
 public class Users {
 

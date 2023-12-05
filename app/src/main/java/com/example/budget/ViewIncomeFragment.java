@@ -126,17 +126,24 @@ public class ViewIncomeFragment extends Fragment implements View.OnClickListener
 
         requestQueue2=Volley.newRequestQueue(requireContext());
 
+        //get the income data from the users
         IncomeList.addAll(this.mUsersRepo.GetIncome(this.mUsername));
+        //check if the array is above 0 is so do
         if(IncomeList.size()>0) {
+            //loop through the array
             for (int i = 0; i < IncomeList.size(); i++) {
+                //make the users equal to instance of the array
                 Users users = IncomeList.get(i);
 
+                //get the values
                 int IncAmount = users.getIncamount();
                 String Date = users.getDate();
                 String Description = users.getDescription();
+                //display the values
                 incomeList.add("Amount: " + IncAmount + " date: " + Date + " Description: " + Description);
 
             }
+            //notify adapter data has changed
             adapter.notifyDataSetChanged();
         }else {
 

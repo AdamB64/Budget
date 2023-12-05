@@ -89,6 +89,7 @@ public class BudgetFragement extends Fragment implements View.OnClickListener {
         if (getArguments() != null) {
             this.mUsername = getArguments().getString(UsernamePassed);
         }
+        //declare the new repos and arrays
         this.mUsersRepo = new UsersRepo(getContext());
         this.Goals = new ArrayList<>();
         this.Budget = new ArrayList<>();
@@ -128,31 +129,49 @@ public class BudgetFragement extends Fragment implements View.OnClickListener {
 
         Button GoalNavButton = view.findViewById(R.id.BtnGoalNavBudget);
         GoalNavButton.setOnClickListener(this);
+
+        //declare budget
         int budget=0;
+
+        // get all the income amounts and expenses amount
         Budget.addAll(this.mUsersRepo.findBudget(this.mUsername));
+        //if there is any income and expenses amount do
         if(Budget.size()>0){
+            //loop through the array size
             for(int i =0;i<Budget.size();i++){
 
+                //set up the users for getters and setters
                 Users users = Budget.get(i);
+
+                //declare placeholderInc
                 int PlaceHolderExp = users.getExpAmount();
 
+                //declare PlaceHolderExp
                 int PlaceHolderInc = users.getIncamount();
 
+                //add income to budget
                 budget+=PlaceHolderInc;
+                //add expenses to budget
                 budget-=PlaceHolderExp;
 
             }
+            //out budget to fragment textview
             BudgetFragement.this.budgetInputTextView.setText("Budget: "+ budget);
         }
 
 
-
+        //get the room data of the goal of users
         Goals.addAll(this.mUsersRepo.findGoal(this.mUsername));
+        //check if room has any gaols for users else use firebase database
         if(Goals.size()>0){
+                //set up users with first goal
                 Users users = Goals.get(0);
 
+                //set goal to room goal
                 int goal =users.getGoal();
+                //get percentage
                 double  percent = ((double) budget/goal)*100;
+                //display goal and percentage towards goal
             BudgetFragement.this.GoalInputTextView.setText("Goal: "+ goal+" and the percentage you are to reaching it "+percent+"%");
         }else {
 

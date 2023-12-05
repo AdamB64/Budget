@@ -8,6 +8,10 @@ import androidx.room.Query;
 
 import java.util.List;
 
+
+/**
+ * the inserts and querys to inserts data and find data to/from the Users database
+ */
 @Dao
 public interface UsersDAO {
 

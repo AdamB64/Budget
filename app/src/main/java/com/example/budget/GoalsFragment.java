@@ -178,7 +178,7 @@ public class GoalsFragment extends Fragment implements View.OnClickListener{
 
         // Make a network request using Volley
         RequestQueue requestQueue = Volley.newRequestQueue(context);
-
+        //add the goal and the username to a users field
         Users users = new Users();
         users.setGoal(Integer.parseInt(newGoal));
         users.setUserName(this.mUsername);
@@ -189,6 +189,7 @@ public class GoalsFragment extends Fragment implements View.OnClickListener{
         users.setDate("");
         users.setPassword("");
 
+        //add the user to the database
         this.mUsersRepo.addUser(users);
 
         // Create the JSONObject for the update
